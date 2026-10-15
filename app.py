@@ -29,6 +29,7 @@ def get_alipay_client():
     notify_url = os.environ.get("ALIPAY_NOTIFY_URL", "")
     return AliPay(
         appid=app_id,
+        app_notify_url=notify_url,
         app_private_key_string=app_private_key,
         alipay_public_key_string=alipay_public_key,
         sign_type="RSA2",
