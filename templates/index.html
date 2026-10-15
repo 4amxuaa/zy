@@ -1,0 +1,246 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员充值中心</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 480px;
+            width: 100%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 12px;
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
+        }
+        .header h1 {
+            font-size: 22px;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+        .header p {
+            color: #888;
+            font-size: 13px;
+        }
+        .vip-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: #7a4a00;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 20px;
+            margin-top: 8px;
+        }
+        .section-label {
+            font-size: 13px;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .section-label::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .plan {
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 16px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            position: relative;
+            background: #fafafa;
+        }
+        .plan:hover {
+            border-color: #b0b8e8;
+            transform: translateY(-2px);
+        }
+        .plan.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f2ff, #e8ebff);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.25);
+        }
+        .plan .duration {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+        .plan .price {
+            font-size: 20px;
+            font-weight: 800;
+            color: #667eea;
+        }
+        .plan .price small {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .plan .tag {
+            position: absolute;
+            top: -9px;
+            right: -6px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-weight: 700;
+            box-shadow: 0 3px 8px rgba(238, 90, 90, 0.4);
+        }
+        .benefits {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .benefits li {
+            list-style: none;
+            font-size: 13px;
+            color: #555;
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .benefits li::before {
+            content: '✓';
+            color: #52c41a;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .pay-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #1677ff, #0958d9);
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.25s;
+            box-shadow: 0 8px 20px rgba(22, 119, 255, 0.35);
+        }
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(22, 119, 255, 0.45);
+        }
+        .pay-btn:active { transform: translateY(0); }
+        .footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 16px;
+        }
+        .pay-icon {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 6px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="avatar">👑</div>
+            <h1>会员充值中心</h1>
+            <p>解锁全部高级功能，畅享专属特权</p>
+            <span class="vip-badge">SVIP 尊享</span>
+        </div>
+
+        <div class="section-label">选择套餐</div>
+        <div class="plans" id="plans">
+            <div class="plan" data-months="1" data-price="0.01" onclick="selectPlan(this)">
+                <div class="duration">1 个月</div>
+                <div class="price"><small>¥</small>0.01</div>
+            </div>
+            <div class="plan active" data-months="3" data-price="0.01" onclick="selectPlan(this)">
+                <div class="tag">热门</div>
+                <div class="duration">3 个月</div>
+                <div class="price"><small>¥</small>0.01</div>
+            </div>
+            <div class="plan" data-months="12" data-price="0.01" onclick="selectPlan(this)">
+                <div class="tag">超值</div>
+                <div class="duration">12 个月</div>
+                <div class="price"><small>¥</small>0.01</div>
+            </div>
+        </div>
+
+        <div class="section-label">会员特权</div>
+        <ul class="benefits">
+            <li>无限制使用全部高级功能</li>
+            <li>专属客服 7×24 小时响应</li>
+            <li>云端数据同步与备份</li>
+            <li>去除所有广告与推广</li>
+        </ul>
+
+        <a href="#" class="pay-btn" id="payBtn" onclick="goPay(event)">
+            <span class="pay-icon">💳</span>立即支付 ¥0.01
+        </a>
+        <div class="footer-note">支付即表示同意《会员服务协议》 · 沙箱测试环境</div>
+    </div>
+
+    <script>
+        let selectedMonths = 3;
+        let selectedPrice = '0.01';
+
+        function selectPlan(el) {
+            document.querySelectorAll('.plan').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            selectedMonths = el.dataset.months;
+            selectedPrice = el.dataset.price;
+            document.getElementById('payBtn').innerHTML =
+                '<span class="pay-icon">💳</span>立即支付 ¥' + selectedPrice;
+        }
+
+        function goPay(e) {
+            e.preventDefault();
+            // 跳转到后端创建订单，携带套餐信息
+            window.location.href = '/pay/create?months=' + selectedMonths + '&price=' + selectedPrice;
+        }
+    </script>
+</body>
+</html>
