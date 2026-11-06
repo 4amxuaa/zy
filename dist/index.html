@@ -1,0 +1,3315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>资源商店 · 优质数字资源付费下载平台</title>
+
+<link href="https://cdn.bootcdn.net/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+<link href="https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+
+<style>
+  :root{
+    --primary:#10b981;--primary-dark:#059669;--primary-light:#d1fae5;
+    --bg:#06100c;--surface:#0e1b16;--surface-2:#142720;--surface-3:#1a332a;
+    --text:#e8f5ee;--text-muted:#7a9585;--border:rgba(16,185,129,0.12);
+    --success:#10b981;--success-light:rgba(16,185,129,0.12);
+    --warning:#f59e0b;--warning-light:rgba(245,158,11,0.12);
+    --danger:#ef4444;--danger-light:rgba(239,68,68,0.12);
+    --accent-1:#10b981;--accent-2:#22c55e;--accent-3:#14b8a6;--accent-4:#84cc16;
+    --price:#4ade80;
+    --radius:16px;--radius-sm:10px;
+    --shadow-sm:0 2px 8px rgba(0,0,0,0.5);
+    --shadow-md:0 8px 24px rgba(0,0,0,0.6);
+    --shadow-lg:0 20px 60px rgba(0,0,0,0.7);
+    --font:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer;border:none;background:none}
+  input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
+  img{display:block;max-width:100%}
+
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:linear-gradient(135deg,#10b981,#22c55e,#14b8a6);border-radius:20px}
+
+  .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+  #stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  #particles-js{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  #app{position:relative;z-index:1}
+
+  @keyframes gradient-border-anim {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  @keyframes neon-pulse {
+    0%,100%{box-shadow:0 0 10px rgba(16,185,129,0.4),0 0 30px rgba(16,185,129,0.2),0 0 60px rgba(16,185,129,0.1)}
+    50%{box-shadow:0 0 20px rgba(16,185,129,0.6),0 0 50px rgba(16,185,129,0.3),0 0 100px rgba(16,185,129,0.2)}
+  }
+  .neon{animation:neon-pulse 2.5s ease-in-out infinite}
+  @keyframes float-y {0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .float-y{animation:float-y 4s ease-in-out infinite}
+  @keyframes float-rotate {0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-15px) rotate(5deg)}}
+  .float-rotate{animation:float-rotate 6s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes shimmer{to{background-position:-200% 0}}
+  @keyframes fade-in{from{opacity:0}to{opacity:1}}
+  @keyframes modal-enter{from{opacity:0;transform:scale(0.92) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  @keyframes toast-enter{from{opacity:0;transform:translateX(120px) scale(0.8)}to{opacity:1;transform:translateX(0) scale(1)}}
+  @keyframes rotate-bg{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+  .gradient-text{
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2),var(--accent-3),var(--accent-4));
+    background-size:300% 300%;animation:gradient-border-anim 4s ease infinite;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+
+  /* 顶栏 */
+  header{position:sticky;top:0;z-index:50;background:rgba(6,16,12,0.75);backdrop-filter:blur(30px) saturate(180%);border-bottom:1px solid rgba(16,185,129,0.1)}
+  .nav{display:flex;align-items:center;gap:20px;height:72px}
+  .logo{display:flex;align-items:center;gap:12px;font-weight:900;font-size:20px;letter-spacing:-.02em;flex-shrink:0;color:#fff}
+  .logo-mark{
+    width:42px;height:42px;border-radius:14px;
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2),var(--accent-3));
+    background-size:300% 300%;animation:gradient-border-anim 4s ease infinite;
+    display:grid;place-items:center;color:#fff;box-shadow:0 4px 20px rgba(16,185,129,0.5);
+    transition:all 0.5s cubic-bezier(0.68,-0.55,0.265,1.55);
+  }
+  .logo-mark:hover{transform:rotate(720deg) scale(1.15)}
+  .logo-mark svg{width:24px;height:24px}
+
+  .search-box{flex:1;max-width:460px;position:relative}
+  .search-box input{
+    width:100%;height:46px;padding:0 16px 0 46px;border:2px solid rgba(16,185,129,0.12);
+    border-radius:999px;background:rgba(16,185,129,0.04);color:var(--text);
+    transition:all 0.3s ease;outline:none;
+  }
+  .search-box input:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px rgba(16,185,129,0.15),0 0 30px rgba(16,185,129,0.25);
+    background:rgba(16,185,129,0.06);
+  }
+  .search-box svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--text-muted)}
+
+  /* 按钮 */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    height:44px;padding:0 22px;border-radius:var(--radius-sm);
+    font-weight:600;font-size:14px;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+    white-space:nowrap;position:relative;overflow:hidden;
+  }
+  .btn svg{width:18px;height:18px}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2));background-size:200% 200%;
+    animation:gradient-border-anim 3s ease infinite;color:#fff;box-shadow:0 4px 20px rgba(16,185,129,0.5);
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(16,185,129,0.7)}
+  .btn-ghost{background:transparent;color:var(--text);border:2px solid rgba(16,185,129,0.15)}
+  .btn-ghost:hover{border-color:var(--primary);background:rgba(16,185,129,0.08);transform:translateY(-2px)}
+  .btn-soft{background:rgba(16,185,129,0.1);color:var(--primary)}
+  .btn-soft:hover{background:rgba(16,185,129,0.2);transform:translateY(-2px)}
+  .btn-sm{height:36px;padding:0 14px;font-size:13px;border-radius:8px}
+  .btn-block{width:100%}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+  /* Hero */
+  .hero{
+    position:relative;border-radius:28px;padding:70px 56px;margin:36px 0;overflow:hidden;
+    background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(34,197,94,0.12),rgba(20,184,166,0.08));
+    border:1px solid rgba(16,185,129,0.25);
+  }
+  .hero::before{
+    content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;
+    background:conic-gradient(from 0deg,transparent,rgba(16,185,129,0.18),transparent,rgba(34,197,94,0.18),transparent,rgba(20,184,166,0.15),transparent);
+    animation:rotate-bg 15s linear infinite;
+  }
+  .hero::after{
+    content:'';position:absolute;top:20%;right:10%;width:200px;height:200px;
+    background:radial-gradient(circle,rgba(16,185,129,0.4),transparent 70%);
+    border-radius:50%;filter:blur(40px);animation:float-y 5s ease-in-out infinite;
+  }
+  .hero-content{position:relative;z-index:1}
+  .hero h1{
+    font-size:56px;font-weight:900;letter-spacing:-.04em;margin-bottom:20px;line-height:1.05;
+    background:linear-gradient(135deg,#fff,#a7f3d0,#bbf7d0,#bef264);
+    background-size:300% 300%;animation:gradient-border-anim 5s ease infinite;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .hero p{font-size:19px;opacity:.75;max-width:560px;margin-bottom:36px;color:#a8c5b5}
+  .hero-stats{display:flex;gap:48px;flex-wrap:wrap}
+  .hero-stat{transition:all 0.3s ease;cursor:default}
+  .hero-stat:hover{transform:translateY(-8px) scale(1.05)}
+  .hero-stat b{
+    display:block;font-size:38px;font-weight:900;
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2),var(--accent-3));
+    background-size:300% 300%;animation:gradient-border-anim 3s ease infinite;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .hero-stat span{font-size:14px;color:var(--text-muted)}
+
+  /* 商品区 */
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin:40px 0 20px;gap:16px;flex-wrap:wrap}
+  .section-head h2{font-size:26px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:12px;color:#fff}
+  .section-head h2 .bar{width:4px;height:28px;border-radius:2px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));box-shadow:0 0 20px rgba(16,185,129,0.6)}
+
+  .toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;flex:1}
+  .chip{
+    padding:8px 18px;border-radius:999px;background:var(--surface);
+    border:2px solid rgba(16,185,129,0.12);font-size:13px;font-weight:600;
+    color:var(--text-muted);transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  .chip:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-2px)}
+  .chip.active{
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2));border-color:transparent;
+    color:#fff;box-shadow:0 4px 20px rgba(16,185,129,0.5);
+  }
+
+  .sort-select{
+    height:42px;padding:0 16px;border:2px solid rgba(16,185,129,0.12);
+    border-radius:var(--radius-sm);background:var(--surface);
+    font-weight:600;color:var(--text);outline:none;cursor:pointer;transition:all 0.3s ease;
+  }
+  .sort-select:focus{border-color:var(--primary)}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .card{
+    background:var(--surface);border:1px solid rgba(16,185,129,0.08);
+    border-radius:var(--radius);overflow:hidden;
+    transition:all 0.5s cubic-bezier(0.4,0,0.2,1);
+    cursor:pointer;display:flex;flex-direction:column;position:relative;
+  }
+  .card:hover{
+    transform:translateY(-12px) scale(1.03);
+    box-shadow:0 30px 80px rgba(0,0,0,0.7),0 0 40px rgba(16,185,129,0.3);
+    border-color:rgba(16,185,129,0.5);
+  }
+  .card-thumb{aspect-ratio:16/10;position:relative;display:grid;place-items:center;overflow:hidden}
+  .card-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,16,12,0.5),transparent)}
+  .card-thumb .ext{
+    font-size:44px;font-weight:900;color:#fff;letter-spacing:.04em;
+    text-shadow:0 4px 20px rgba(0,0,0,0.6);position:relative;z-index:1;transition:all 0.4s ease;
+  }
+  .card:hover .ext{transform:scale(1.15) rotate(-5deg)}
+  .badge-featured{
+    position:absolute;top:12px;left:12px;z-index:2;background:rgba(255,255,255,0.95);
+    color:var(--warning);font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px;
+    display:flex;align-items:center;gap:4px;box-shadow:0 4px 15px rgba(0,0,0,0.4);
+  }
+  .badge-featured svg{width:12px;height:12px}
+  .badge-discount{
+    position:absolute;top:12px;right:12px;z-index:2;
+    background:linear-gradient(135deg,#f43f5e,#e11d48);color:#fff;
+    font-size:12px;font-weight:800;padding:5px 10px;border-radius:8px;
+    box-shadow:0 4px 15px rgba(244,63,94,0.5);
+  }
+  .card-body{padding:20px 22px 22px;flex:1;display:flex;flex-direction:column;position:relative;z-index:1}
+  .card-cat{
+    font-size:11px;font-weight:700;color:var(--primary);background:rgba(16,185,129,0.12);
+    padding:3px 10px;border-radius:6px;align-self:flex-start;margin-bottom:10px;
+    border:1px solid rgba(16,185,129,0.25);
+  }
+  .card-title{
+    font-size:16px;font-weight:700;line-height:1.4;margin-bottom:8px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;min-height:44px;color:#fff;
+  }
+  .card-desc{
+    font-size:13px;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;
+    -webkit-box-orient:vertical;overflow:hidden;margin-bottom:14px;
+  }
+  .card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+  .price{display:flex;align-items:baseline;gap:6px}
+  .price .cur{font-size:14px;font-weight:700;color:var(--price)}
+  .price .num{font-size:26px;font-weight:900;color:var(--price);letter-spacing:-.02em}
+  .price .old{font-size:12px;color:var(--text-muted);text-decoration:line-through}
+  .card-sales{font-size:12px;color:var(--text-muted)}
+
+  .pagination{display:flex;justify-content:center;align-items:center;gap:8px;margin:40px 0 10px}
+  .pagination button{
+    min-width:42px;height:42px;padding:0 14px;border-radius:12px;
+    border:2px solid rgba(16,185,129,0.12);background:var(--surface);
+    font-weight:600;color:var(--text);transition:all 0.3s ease;
+  }
+  .pagination button:hover:not(:disabled){
+    border-color:var(--primary);color:var(--primary);
+    transform:translateY(-3px);box-shadow:0 8px 20px rgba(16,185,129,0.4);
+  }
+  .pagination button.active{
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2));border-color:transparent;
+    color:#fff;box-shadow:0 8px 25px rgba(16,185,129,0.5);
+  }
+  .pagination button:disabled{opacity:.4;cursor:not-allowed}
+
+  /* 弹窗 */
+  .overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(20px);
+    z-index:100;display:flex;align-items:center;justify-content:center;
+    padding:20px;overflow-y:auto;animation:fade-in 0.3s ease;
+  }
+  .modal{
+    background:var(--surface);border:1px solid rgba(16,185,129,0.12);
+    border-radius:24px;width:100%;max-width:540px;
+    box-shadow:0 40px 100px rgba(0,0,0,0.8),0 0 60px rgba(16,185,129,0.2);overflow:hidden;
+    animation:modal-enter 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .modal-lg{max-width:880px}
+  .modal-head{padding:24px 30px;border-bottom:1px solid rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:space-between}
+  .modal-head h3{font-size:20px;font-weight:800;color:#fff}
+  .modal-close{
+    width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+    color:var(--text-muted);transition:all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+  }
+  .modal-close:hover{background:rgba(16,185,129,0.1);color:var(--primary);transform:rotate(180deg) scale(1.1)}
+  .modal-body{padding:30px}
+
+  /* 双栏认证弹窗 */
+  .auth-modal{
+    background:var(--surface);border:1px solid rgba(16,185,129,0.12);
+    border-radius:24px;width:100%;max-width:940px;max-height:92vh;
+    box-shadow:0 40px 100px rgba(0,0,0,0.85),0 0 80px rgba(16,185,129,0.25);overflow:hidden;
+    display:grid;grid-template-columns:1fr 1fr;
+    animation:modal-enter 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .auth-side{
+    position:relative;padding:48px 44px;overflow:hidden;
+    background:linear-gradient(135deg,#064e3b 0%,#047857 50%,#059669 100%);
+    display:flex;flex-direction:column;justify-content:space-between;
+    color:#fff;
+  }
+  .auth-side::before{
+    content:'';position:absolute;top:-40%;right:-40%;width:180%;height:180%;
+    background:conic-gradient(from 0deg,transparent,rgba(167,243,208,0.25),transparent,rgba(187,247,208,0.2),transparent);
+    animation:rotate-bg 20s linear infinite;
+  }
+  .auth-side::after{
+    content:'';position:absolute;bottom:-30%;left:-20%;width:400px;height:400px;
+    background:radial-gradient(circle,rgba(34,197,94,0.4),transparent 70%);
+    border-radius:50%;filter:blur(60px);
+  }
+  .auth-side-inner{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;justify-content:space-between}
+  .auth-brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:20px}
+  .auth-brand-icon{
+    width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);display:grid;place-items:center;
+    border:1px solid rgba(255,255,255,0.25);
+  }
+  .auth-brand-icon svg{width:24px;height:24px}
+  .auth-side h2{font-size:32px;font-weight:900;letter-spacing:-.03em;line-height:1.2;margin:32px 0 14px}
+  .auth-side p{font-size:15px;opacity:.9;line-height:1.7;margin-bottom:28px}
+  .auth-features{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+  .auth-feature{display:flex;align-items:center;gap:12px;font-size:14px;opacity:.95}
+  .auth-feature svg{width:20px;height:20px;flex-shrink:0;color:#a7f3d0}
+  .auth-side-foot{font-size:12px;opacity:.75}
+
+  .auth-form-col{
+    padding:44px 44px;display:flex;flex-direction:column;
+    overflow-y:auto;max-height:92vh;background:var(--surface);
+  }
+  .auth-form-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .auth-form-head h2{font-size:24px;font-weight:800;color:#fff}
+  .auth-form-head .close-btn{
+    width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+    color:var(--text-muted);transition:all 0.3s;
+  }
+  .auth-form-head .close-btn:hover{background:rgba(16,185,129,0.1);color:var(--primary);transform:rotate(90deg)}
+  .auth-form-sub{color:var(--text-muted);font-size:13.5px;margin-bottom:24px}
+
+  .auth-tabs{display:flex;background:var(--surface-2);border-radius:12px;padding:4px;margin-bottom:20px}
+  .auth-tabs button{
+    flex:1;height:40px;border-radius:8px;font-weight:700;font-size:13.5px;
+    color:var(--text-muted);transition:all 0.3s ease;
+  }
+  .auth-tabs button.active{
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;
+    box-shadow:0 4px 20px rgba(16,185,129,0.5);
+  }
+
+  .auth-field{margin-bottom:16px}
+  .auth-field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:7px;color:var(--text)}
+  .auth-field .input-wrap{position:relative}
+  .auth-field .input-wrap svg.lead{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    width:18px;height:18px;color:var(--text-muted);pointer-events:none;
+  }
+  .auth-field input{
+    width:100%;height:48px;padding:0 14px 0 44px;border:2px solid rgba(16,185,129,0.12);
+    border-radius:12px;background:var(--surface-2);outline:none;transition:all 0.3s ease;
+    font-size:14.5px;
+  }
+  .auth-field input:focus{
+    border-color:var(--primary);background:rgba(16,185,129,0.06);
+    box-shadow:0 0 0 4px rgba(16,185,129,0.15);
+  }
+  .auth-field input::placeholder{color:#4a6558}
+
+  .captcha-row{display:flex;gap:10px;align-items:stretch}
+  .captcha-row .input-wrap{flex:1}
+  .captcha-img{
+    width:130px;height:48px;border-radius:12px;
+    border:2px solid rgba(16,185,129,0.12);background:#fff;
+    cursor:pointer;flex-shrink:0;object-fit:cover;transition:all 0.3s;
+  }
+  .captcha-img:hover{border-color:var(--primary);box-shadow:0 0 0 4px rgba(16,185,129,0.15)}
+  .captcha-img.loading{opacity:0.5}
+
+  .sms-btn{
+    width:130px;height:48px;border-radius:12px;
+    background:rgba(16,185,129,0.1);color:var(--primary);
+    font-weight:700;font-size:13px;transition:all 0.3s;
+    border:2px solid transparent;flex-shrink:0;
+  }
+  .sms-btn:hover:not(:disabled){background:rgba(16,185,129,0.2);border-color:var(--primary)}
+  .sms-btn:disabled{opacity:.55;cursor:not-allowed}
+
+  .auth-row{display:flex;align-items:center;justify-content:space-between;margin:6px 0 20px}
+  .checkbox{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);cursor:pointer;user-select:none}
+  .checkbox input{width:16px;height:16px;accent-color:var(--primary)}
+  .auth-link{color:var(--primary);font-size:13px;font-weight:600;cursor:pointer}
+  .auth-link:hover{text-decoration:underline}
+
+  .auth-submit{
+    width:100%;height:50px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2));background-size:200% 200%;
+    animation:gradient-border-anim 3s ease infinite;color:#fff;
+    font-weight:700;font-size:15px;box-shadow:0 4px 20px rgba(16,185,129,0.5);
+    transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .auth-submit:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(16,185,129,0.7)}
+  .auth-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+  .auth-divider{
+    display:flex;align-items:center;gap:12px;color:var(--text-muted);
+    font-size:12px;margin:22px 0 16px;
+  }
+  .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:rgba(16,185,129,0.12)}
+
+  .oauth-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .oauth-btn{
+    height:46px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    border:2px solid rgba(16,185,129,0.12);background:var(--surface-2);
+    font-weight:600;font-size:13px;color:var(--text);transition:all 0.3s;
+  }
+  .oauth-btn:hover{transform:translateY(-2px)}
+  .oauth-btn svg{width:20px;height:20px}
+  .oauth-btn.wechat:hover{border-color:#07c160;background:rgba(7,193,96,0.08);color:#07c160}
+  .oauth-btn.qq:hover{border-color:#12b7f5;background:rgba(18,183,245,0.08);color:#12b7f5}
+  .oauth-btn.github:hover{border-color:#fff;background:rgba(255,255,255,0.05);color:#fff}
+
+  .auth-foot-text{text-align:center;color:var(--text-muted);font-size:13px;margin-top:18px}
+
+  @media(max-width:760px){
+    .auth-modal{grid-template-columns:1fr;max-width:460px}
+    .auth-side{display:none}
+    .auth-form-col{padding:32px 26px}
+  }
+
+  /* Toast */
+  #toasts{position:fixed;top:24px;right:24px;z-index:200;display:flex;flex-direction:column;gap:14px}
+  .toast{
+    background:rgba(14,27,22,0.95);border:1px solid rgba(16,185,129,0.15);
+    border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,0.6),0 0 30px rgba(16,185,129,0.2);
+    padding:18px 22px;display:flex;align-items:center;gap:14px;
+    font-size:14px;font-weight:600;min-width:300px;max-width:400px;
+    border-left:4px solid var(--primary);backdrop-filter:blur(20px);
+    animation:toast-enter 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .toast.success{border-left-color:var(--success)}
+  .toast.error{border-left-color:var(--danger)}
+  .toast.warn{border-left-color:var(--warning)}
+  .toast svg{width:22px;height:22px;flex-shrink:0}
+  .toast.success svg{color:var(--success)}
+  .toast.error svg{color:var(--danger)}
+  .toast.warn svg{color:var(--warning)}
+
+  /* 其他 */
+  .skeleton{
+    background:linear-gradient(90deg,var(--surface) 25%,var(--surface-2) 50%,var(--surface) 75%);
+    background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius);
+  }
+  .sk-card{height:300px}
+  .spinner{width:16px;height:16px;border:2px solid rgba(16,185,129,0.15);border-top-color:var(--primary);border-radius:50%;animation:spin 0.7s linear infinite}
+  .success-ring{
+    width:80px;height:80px;border-radius:50%;background:var(--success-light);
+    display:grid;place-items:center;margin:0 auto 16px;
+  }
+  .success-ring svg{width:40px;height:40px;color:var(--success)}
+  .empty{text-align:center;padding:80px 20px;color:var(--text-muted)}
+  .empty svg{width:64px;height:64px;margin:0 auto 20px;opacity:.5}
+  .empty h3{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+
+  .pay-amount{font-size:40px;font-weight:900;color:var(--price);margin:6px 0 18px}
+  .qr-box{
+    width:220px;height:220px;margin:0 auto 16px;border:2px solid rgba(16,185,129,0.2);
+    border-radius:var(--radius);padding:12px;background:#fff;
+  }
+  .qr-box img{width:100%;height:100%}
+  .pay-tip{
+    display:inline-flex;align-items:center;gap:8px;color:var(--text-muted);
+    font-size:13px;background:var(--surface-2);padding:10px 18px;border-radius:999px;
+  }
+
+  .detail-grid{display:grid;grid-template-columns:300px 1fr;gap:26px}
+  .detail-thumb{aspect-ratio:1;border-radius:var(--radius);display:grid;place-items:center}
+  .detail-thumb .ext{font-size:52px;font-weight:900;color:#fff;text-shadow:0 4px 20px rgba(0,0,0,0.5)}
+  .detail-info h2{font-size:24px;font-weight:800;line-height:1.3;margin-bottom:12px;color:#fff}
+  .detail-price-box{
+    background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(16,185,129,0.05));
+    border:1px solid rgba(16,185,129,0.3);border-radius:var(--radius);
+    padding:18px 20px;margin:16px 0;display:flex;align-items:baseline;gap:12px;
+  }
+  .detail-price-box .cur{font-size:20px;font-weight:800;color:var(--price)}
+  .detail-price-box .num{font-size:40px;font-weight:900;color:var(--price);letter-spacing:-.02em}
+  .detail-price-box .old{font-size:15px;color:var(--text-muted);text-decoration:line-through}
+  .detail-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  .meta-item{background:var(--surface-2);border-radius:10px;padding:12px 14px}
+  .meta-item .k{font-size:12px;color:var(--text-muted);margin-bottom:4px}
+  .meta-item .v{font-size:14px;font-weight:700;color:#fff}
+  .tag-list{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+  .tag{font-size:12px;background:var(--surface-2);color:var(--text-muted);padding:5px 12px;border-radius:999px;font-weight:600}
+  .detail-desc{color:var(--text-muted);font-size:14px;line-height:1.7;margin-top:8px;white-space:pre-wrap}
+
+  .dropdown{position:relative}
+  .dropdown-menu{
+    position:absolute;right:0;top:calc(100% + 8px);
+    background:rgba(14,27,22,0.98);backdrop-filter:blur(20px);
+    border:1px solid rgba(16,185,129,0.15);border-radius:16px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 30px rgba(16,185,129,0.2);min-width:240px;padding:10px;
+    animation:modal-enter 0.4s cubic-bezier(0.34,1.56,0.64,1);z-index:60;
+  }
+  .dm-head{padding:14px;border-bottom:1px solid rgba(16,185,129,0.1);margin-bottom:8px}
+  .dm-head b{display:block;font-size:15px;color:#fff}
+  .dm-head span{font-size:12px;color:var(--text-muted)}
+  .dropdown-menu button{
+    display:flex;align-items:center;gap:10px;width:100%;padding:12px;
+    border-radius:10px;font-size:14px;font-weight:600;color:var(--text);
+    transition:all 0.2s;text-align:left;
+  }
+  .dropdown-menu button:hover{background:rgba(16,185,129,0.08)}
+  .dropdown-menu button svg{width:18px;height:18px;color:var(--text-muted)}
+  .dropdown-menu button.danger{color:var(--danger)}
+  .dropdown-menu button.danger svg{color:var(--danger)}
+  .avatar{
+    width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+    color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px;
+    cursor:pointer;box-shadow:0 4px 20px rgba(16,185,129,0.5);
+    transition:all 0.3s ease;
+  }
+  .avatar:hover{transform:scale(1.15) rotate(10deg)}
+
+  .table-wrap{
+    background:var(--surface);border:1px solid rgba(16,185,129,0.08);
+    border-radius:var(--radius);overflow:hidden;overflow-x:auto;
+  }
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+  thead th{
+    background:var(--surface-2);text-align:left;padding:14px 16px;
+    font-weight:700;color:var(--text-muted);font-size:12.5px;white-space:nowrap;
+  }
+  tbody td{padding:14px 16px;border-top:1px solid rgba(16,185,129,0.08);vertical-align:middle}
+  tbody tr:hover{background:rgba(16,185,129,0.04)}
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+  .pill.paid{background:var(--success-light);color:var(--success)}
+  .pill.pending{background:var(--warning-light);color:var(--warning)}
+  .pill.on{background:var(--success-light);color:var(--success)}
+  .pill.off{background:var(--danger-light);color:var(--danger)}
+  .pill.cancelled{background:var(--surface-2);color:var(--text-muted)}
+
+  /* 下载页 */
+  .dl-page{
+    max-width:580px;margin:60px auto;background:var(--surface);
+    border:1px solid rgba(16,185,129,0.12);border-radius:20px;
+    box-shadow:var(--shadow-lg),0 0 40px rgba(16,185,129,0.2);overflow:hidden;
+  }
+  .dl-hero{
+    background:linear-gradient(135deg,#059669,#10b981,#22c55e);
+    color:#fff;padding:36px;text-align:center;
+  }
+  .dl-hero .success-ring{background:rgba(255,255,255,.2);margin-bottom:16px}
+  .dl-hero .success-ring svg{color:#fff}
+  .dl-hero h2{font-size:24px;font-weight:800}
+  .dl-hero p{opacity:.9;font-size:14px;margin-top:4px}
+  .dl-body{padding:28px}
+
+  @media(max-width:960px){ .grid{grid-template-columns:repeat(3,1fr)} }
+  @media(max-width:720px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .detail-grid{grid-template-columns:1fr}
+    .hero{padding:40px 24px}
+    .hero h1{font-size:36px}
+    .search-box{display:none}
+    .oauth-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:480px){ .grid{grid-template-columns:1fr 1fr;gap:14px} }
+</style>
+
+
+</head>
+<body>
+
+<div id="stars-canvas"></div>
+<div id="particles-js"></div>
+
+<div id="app">
+  <!-- ==================== 商店视图 ==================== -->
+  <template v-if="view==='store'">
+    <header>
+      <div class="container nav">
+        <a class="logo" href="#" @click.prevent="goHome">
+          <span class="logo-mark float-rotate">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.29 7 12 12 20.71 7"/>
+              <line x1="12" y1="22" x2="12" y2="12"/>
+            </svg>
+          </span>
+          <span class="gradient-text">资源商店</span>
+        </a>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="search" v-model="s" @keydown.enter="doSearch" placeholder="搜索资源..."/>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+          <template v-if="user">
+            <div class="dropdown">
+              <div class="avatar" @click="userMenu=!userMenu" :title="user.nickname||user.username">{{ userInitial }}</div>
+              <div class="dropdown-menu" v-show="userMenu">
+                <div class="dm-head">
+                  <b>{{ user.nickname || user.username }}</b>
+                  <span>{{ user.phone || ('ID: '+user.id) }}</span>
+                </div>
+                <button @click="userMenu=false;openUC()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v13.4a1 1 0 0 0 1.6.8L12 13l4.4 3.2a1 1 0 0 0 1.6-.8V2"/></svg>
+                  我的订单
+                </button>
+                <button class="danger" @click="logout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  退出登录
+                </button>
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <button class="btn btn-ghost btn-sm" @click="openAuth('login')">登录</button>
+            <button class="btn btn-primary btn-sm neon" @click="openAuth('register')">注册</button>
+          </template>
+          <!-- 管理后台入口：跳转独立页面 -->
+          <!-- <a href="/admin" class="btn btn-ghost btn-sm">管理后台</a> -->
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div class="hero-content">
+          <h1>优质数字资源<br/>一键即得</h1>
+          <p>精选电子书、软件、教程、设计模板与源代码，安全支付、即时下载</p>
+          <div class="hero-stats">
+            <div class="hero-stat"><b>{{ total }}</b><span>在售资源</span></div>
+            <div class="hero-stat"><b>{{ categories.length }}</b><span>资源分类</span></div>
+            <div class="hero-stat"><b>即时</b><span>付费下载</span></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-head">
+        <h2><span class="bar"></span>{{ listTitle }}</h2>
+      </div>
+
+      <div class="toolbar">
+        <div class="chips">
+          <button class="chip" :class="{active:cat===''}" @click="setCat('')">全部</button>
+          <button v-for="c in categories" :key="c.name" class="chip" :class="{active:cat===c.name}" @click="setCat(c.name)">
+            {{ c.name }} <span style="opacity:.6">{{ c.count }}</span>
+          </button>
+        </div>
+        <select class="sort-select" v-model="sort" @change="loadProducts">
+          <option value="newest">最新上架</option>
+          <option value="sales">销量优先</option>
+          <option value="price_asc">价格从低到高</option>
+          <option value="price_desc">价格从高到低</option>
+        </select>
+      </div>
+
+      <div v-if="loading" class="grid">
+        <div v-for="i in 8" :key="i" class="skeleton sk-card"></div>
+      </div>
+
+      <div v-else-if="products.length===0" class="grid">
+        <div class="empty" style="grid-column:1/-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7 12 3 4 7l8 4 8-4z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg>
+          <h3>暂无资源</h3><p>换个分类或搜索词试试</p>
+        </div>
+      </div>
+
+      <div v-else class="grid">
+        <article v-for="p in products" :key="p.uuid" class="card" @click="openDetail(p.uuid)">
+          <div class="card-thumb" :style="{background:catGrad(p.category)}">
+            <span class="ext">{{ fileExt(p.original_filename) }}</span>
+            <span v-if="p.is_featured" class="badge-featured">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 15 9l7 .5-5.5 4.5L18 21l-6-3.8L6 21l1.5-7L2 9.5 9 9z"/></svg>
+              精选
+            </span>
+            <span v-if="p.discount>0" class="badge-discount">-{{ p.discount }}%</span>
+          </div>
+          <div class="card-body">
+            <span class="card-cat">{{ p.category||'其他' }}</span>
+            <h3 class="card-title">{{ p.title }}</h3>
+            <p class="card-desc">{{ p.description||'暂无描述' }}</p>
+            <div class="card-meta">
+              <div class="price">
+                <span class="cur">¥</span>
+                <span class="num">{{ fmtMoney(p.price) }}</span>
+                <span v-if="p.original_price&&p.original_price>p.price" class="old">¥{{ fmtMoney(p.original_price) }}</span>
+              </div>
+              <span class="card-sales">{{ p.sales_count||0 }} 售出</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div v-if="pages>1" class="pagination">
+        <button :disabled="page<=1" @click="gotoPage(page-1)">上一页</button>
+        <template v-for="p in dispPages" :key="p">
+          <button v-if="p==='…'" disabled>…</button>
+          <button v-else :class="{active:p===page}" @click="gotoPage(p)">{{ p }}</button>
+        </template>
+        <button :disabled="page>=pages" @click="gotoPage(page+1)">下一页</button>
+      </div>
+    </main>
+
+    <footer style="border-top:1px solid rgba(255,255,255,0.06);margin-top:60px;padding:30px 0;color:var(--text-muted);font-size:13px">
+      <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <span>© 2026 资源商店 · 优质数字资源付费下载平台</span>
+        <!-- <a href="/admin" class="chip">管理后台</a> -->
+      </div>
+    </footer>
+  </template>
+
+  <!-- ==================== 下载页 ==================== -->
+  <template v-if="view==='download'">
+    <div class="dl-page" v-if="dlLoading">
+      <div class="dl-body" style="text-align:center;padding:60px">
+        <div class="spinner" style="margin:0 auto;width:32px;height:32px"></div>
+      </div>
+    </div>
+    <div class="dl-page" v-else-if="dlError">
+      <div class="dl-body" style="text-align:center;padding:50px">
+        <div class="success-ring" style="background:var(--danger-light)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+        </div>
+        <h2 style="font-size:20px;font-weight:800;color:#fff">{{ dlError }}</h2>
+        <button class="btn btn-ghost" style="margin-top:20px" @click="hideDL">返回首页</button>
+      </div>
+    </div>
+    <div class="dl-page" v-else-if="dlData">
+      <div class="dl-hero">
+        <div class="success-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <h2>购买成功</h2>
+        <p>您的资源已准备就绪，点击下方按钮下载</p>
+      </div>
+      <div class="dl-body">
+        <div style="display:flex;gap:14px;align-items:center;margin-bottom:20px">
+          <div class="detail-thumb" style="width:64px;height:64px;aspect-ratio:1;border-radius:12px;flex-shrink:0" :style="{background:catGrad(dlData.product.category)}">
+            <span class="ext" style="font-size:20px">{{ fileExt(dlData.product.original_filename) }}</span>
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:16px;color:#fff">{{ dlData.product.title||'资源文件' }}</div>
+            <div style="color:var(--text-muted);font-size:13px;margin-top:2px">{{ dlData.product.original_filename||'' }} · {{ fmtSize(dlData.product.file_size) }}</div>
+          </div>
+        </div>
+        <div class="detail-meta">
+          <div class="meta-item"><div class="k">订单号</div><div class="v" style="font-size:12px">{{ dlData.order.order_id }}</div></div>
+          <div class="meta-item"><div class="k">支付金额</div><div class="v" style="color:#f87171">¥{{ fmtMoney(dlData.order.amount) }}</div></div>
+          <div class="meta-item"><div class="k">剩余下载次数</div><div class="v">{{ dlData.order.remaining!=null?dlData.order.remaining:(dlData.order.max_downloads-dlData.order.download_count) }} / {{ dlData.order.max_downloads }} 次</div></div>
+          <div class="meta-item"><div class="k">链接有效期至</div><div class="v" style="font-size:12px">{{ fmtDate(dlData.order.expired_at) }}</div></div>
+        </div>
+        <a class="btn btn-primary btn-block neon" style="height:50px;font-size:16px;margin-top:18px" :href="dlData.download_url" @click="toast('开始下载…','success')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          立即下载
+        </a>
+        <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:14px">请妥善保管下载链接，下载次数用尽或超过有效期后将无法再次下载。</p>
+        <button class="btn btn-ghost btn-block" style="margin-top:14px" @click="hideDL">返回商店</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- ==================== 双栏认证弹窗 ==================== -->
+  <div v-if="authModal" class="overlay" @click.self="closeAuth">
+    <div class="auth-modal">
+      <aside class="auth-side">
+        <div class="auth-side-inner">
+          <div>
+            <div class="auth-brand">
+              <div class="auth-brand-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  <polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/>
+                </svg>
+              </div>
+              <span>资源商店</span>
+            </div>
+            <h2>{{ authModal==='login' ? '欢迎回来' : '开启你的资源之旅' }}</h2>
+            <p>{{ authModal==='login' ? '登录后即可购买、下载和管理你的所有资源。' : '注册账号，享受即时下载、订单管理与专属优惠。' }}</p>
+            <div class="auth-features">
+              <div class="auth-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg><span>海量优质数字资源</span></div>
+              <div class="auth-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg><span>安全支付 · 即时下载</span></div>
+              <div class="auth-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg><span>订单可管理 · 可重新下载</span></div>
+              <!-- <div class="auth-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg><span>支持微信 / QQ / GitHub 登录</span></div> -->
+            </div>
+          </div>
+          <div class="auth-side-foot">© 2026 资源商店 · 保留所有权利</div>
+        </div>
+      </aside>
+
+      <div class="auth-form-col">
+        <div class="auth-form-head">
+          <h2>{{ authModal==='login' ? '登录账号' : '创建账号' }}</h2>
+          <button class="close-btn" @click="closeAuth" title="关闭">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <p class="auth-form-sub">{{ authModal==='login' ? '请选择登录方式' : '填写以下信息即可快速注册' }}</p>
+
+        <div class="auth-tabs">
+          <button :class="{active:authModal==='login'}" @click="switchAuth('login')">登录</button>
+          <button :class="{active:authModal==='register'}" @click="switchAuth('register')">注册</button>
+        </div>
+
+        <!-- 登录 -->
+        <template v-if="authModal==='login'">
+<!--           <div class="auth-tabs" style="margin-bottom:22px">
+            <button :class="{active:loginMode==='password'}" @click="loginMode='password';$nextTick(loadLoginCaptcha)">密码登录</button>
+            <button :class="{active:loginMode==='sms'}" @click="loginMode='sms';$nextTick(loadLoginCaptcha)">短信登录</button>
+          </div> -->
+
+          <template v-if="loginMode==='password'">
+            <div class="auth-field">
+              <label>用户名</label>
+              <div class="input-wrap">
+                <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input v-model="loginUser" placeholder="请输入用户名或手机号" autocomplete="username" @keydown.enter="doLogin">
+              </div>
+            </div>
+            <div class="auth-field">
+              <label>密码</label>
+              <div class="input-wrap">
+                <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input v-model="loginPwd" type="password" placeholder="请输入密码" autocomplete="current-password" @keydown.enter="doLogin">
+              </div>
+            </div>
+            <div class="auth-field">
+              <label>图形验证码</label>
+              <div class="captcha-row">
+                <div class="input-wrap">
+                  <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.66 0 3.22.45 4.56 1.24"/></svg>
+                  <input v-model="loginCaptcha" placeholder="输入验证码" maxlength="6" @keydown.enter="doLogin">
+                </div>
+                <img class="captcha-img" :class="{loading:loginCaptchaLoading}" :src="loginCaptchaImg" @click="loadLoginCaptcha" title="点击刷新" alt="验证码">
+              </div>
+            </div>
+            <div class="auth-row">
+              <label class="checkbox"><input type="checkbox" v-model="loginRemember">记住我</label>
+              <span class="auth-link" @click="toast('请联系管理员重置密码','info')">忘记密码？</span>
+            </div>
+            <button class="auth-submit" :disabled="loginLoading" @click="doLogin">
+              {{ loginLoading ? '登录中…' : '登录' }}
+            </button>
+          </template>
+
+<!--           <template v-else>
+            <div class="auth-field">
+              <label>手机号</label>
+              <div class="input-wrap">
+                <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                <input v-model="smsPhone" placeholder="请输入 11 位手机号" maxlength="11" autocomplete="tel" @keydown.enter="doSmsLogin">
+              </div>
+            </div>
+            <div class="auth-field">
+              <label>图形验证码</label>
+              <div class="captcha-row">
+                <div class="input-wrap">
+                  <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.66 0 3.22.45 4.56 1.24"/></svg>
+                  <input v-model="loginCaptcha" placeholder="输入验证码" maxlength="6">
+                </div>
+                <img class="captcha-img" :class="{loading:loginCaptchaLoading}" :src="loginCaptchaImg" @click="loadLoginCaptcha" title="点击刷新" alt="验证码">
+              </div>
+            </div>
+            <div class="auth-field">
+              <label>短信验证码</label>
+              <div class="captcha-row">
+                <div class="input-wrap">
+                  <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <input v-model="smsCode" placeholder="6 位验证码" maxlength="6" @keydown.enter="doSmsLogin">
+                </div>
+                <button class="sms-btn" :disabled="smsSending || smsCountdown>0" @click="sendSmsCode">
+                  {{ smsCountdown>0 ? smsCountdown+'s 后重发' : (smsSending ? '发送中…' : '获取验证码') }}
+                </button>
+              </div>
+            </div>
+            <div style="height:12px"></div>
+            <button class="auth-submit" :disabled="loginLoading" @click="doSmsLogin">
+              {{ loginLoading ? '登录中…' : '短信登录' }}
+            </button>
+          </template> -->
+
+<!--           <div class="auth-divider">其他登录方式</div>
+          <div class="oauth-grid">
+            <button class="oauth-btn wechat" @click="oauthLogin('wechat')" title="微信登录">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.5 3C4.9 3 2 5.6 2 8.8c0 1.9 1 3.5 2.6 4.6l-.7 2.1 2.4-1.2c.7.2 1.4.3 2.2.3h.6c-.1-.4-.2-.9-.2-1.4 0-3 2.9-5.4 6.4-5.4h.6C15.4 4.9 12.3 3 8.5 3zm-2 3.2c.5 0 .9.4.9.9s-.4.9-.9.9-.9-.4-.9-.9.4-.9.9-.9zm4 0c.5 0 .9.4.9.9s-.4.9-.9.9-.9-.4-.9-.9.4-.9.9-.9zM22 13.8c0-2.6-2.4-4.8-5.4-4.8s-5.4 2.2-5.4 4.8 2.4 4.8 5.4 4.8c.6 0 1.2-.1 1.8-.3l2 1-.5-1.7c1.3-.9 2.1-2.2 2.1-3.8zm-7-1.3c.4 0 .7.3.7.7s-.3.7-.7.7-.7-.3-.7-.7.3-.7.7-.7zm3.2 0c.4 0 .7.3.7.7s-.3.7-.7.7-.7-.3-.7-.7.3-.7.7-.7z"/></svg>
+              微信
+            </button>
+            <button class="oauth-btn qq" @click="oauthLogin('qq')" title="QQ登录">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-3.3 0-6 2.7-6 6v2.5c-.6 1.3-1.3 2.6-1.5 3.8-.2 1.1 0 1.7.8 1.9.6.1 1.3-.3 1.8-.9.2.9.7 1.7 1.4 2.3-.6.3-1.1.7-1.5 1.2-.3.4-.1.8.4.8 1.2.1 2.4-.2 3.6-.6 1.2.4 2.4.7 3.6.6.5 0 .7-.4.4-.8-.4-.5-.9-.9-1.5-1.2.7-.6 1.2-1.4 1.4-2.3.5.6 1.2 1 1.8.9.8-.2 1-.8.8-1.9-.2-1.2-.9-2.5-1.5-3.8V8c0-3.3-2.7-6-6-6z"/></svg>
+              QQ
+            </button>
+            <button class="oauth-btn github" @click="oauthLogin('github')" title="GitHub登录">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5 3.3 9.3 7.8 10.8.6.1.8-.2.8-.5v-1.8c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2.9-.3 1.9-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5C20.2 21.3 23.5 17 23.5 12 23.5 5.7 18.3.5 12 .5z"/></svg>
+              GitHub
+            </button>
+          </div> -->
+          <p class="auth-foot-text">还没有账号？<span class="auth-link" @click="switchAuth('register')">立即注册</span></p>
+        </template>
+
+        <!-- 注册 -->
+        <template v-else>
+          <div class="auth-field">
+            <label>用户名</label>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input v-model="regUser" placeholder="3-20 个字符" minlength="3" maxlength="20" autocomplete="username">
+            </div>
+          </div>
+          <div class="auth-field">
+            <label>手机号（选填）</label>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              <input v-model="regPhone" placeholder="11 位手机号" maxlength="11" autocomplete="tel">
+            </div>
+          </div>
+          <div class="auth-field">
+            <label>密码</label>
+            <div class="input-wrap">
+              <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input v-model="regPwd" type="password" placeholder="至少 6 位" minlength="6" autocomplete="new-password">
+            </div>
+          </div>
+          <div class="auth-field">
+            <label>图形验证码</label>
+            <div class="captcha-row">
+              <div class="input-wrap">
+                <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.66 0 3.22.45 4.56 1.24"/></svg>
+                <input v-model="regCaptcha" placeholder="输入验证码" maxlength="6" @keydown.enter="doRegister">
+              </div>
+              <img class="captcha-img" :class="{loading:regCaptchaLoading}" :src="regCaptchaImg" @click="loadRegCaptcha" title="点击刷新" alt="验证码">
+            </div>
+          </div>
+          <div style="height:6px"></div>
+          <button class="auth-submit" :disabled="regLoading" @click="doRegister">
+            {{ regLoading ? '注册中…' : '注册并登录' }}
+          </button>
+          <p class="auth-foot-text">已有账号？<span class="auth-link" @click="switchAuth('login')">返回登录</span></p>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 商品详情 ==================== -->
+  <div v-if="showDetail && detailData" class="overlay" @click.self="closeDetail">
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <h3>资源详情</h3>
+        <button class="modal-close" @click="closeDetail">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div>
+            <div class="detail-thumb" :style="{background:catGrad(detailData.category)}">
+              <span class="ext">{{ fileExt(detailData.original_filename) }}</span>
+            </div>
+          </div>
+          <div class="detail-info">
+            <span class="card-cat">{{ detailData.category||'其他' }}</span>
+            <h2 style="margin-top:8px">{{ detailData.title }}</h2>
+            <div class="detail-price-box">
+              <span class="cur">¥</span>
+              <span class="num">{{ fmtMoney(detailData.price) }}</span>
+              <span v-if="detailData.original_price&&detailData.original_price>detailData.price" class="old">¥{{ fmtMoney(detailData.original_price) }}</span>
+              <span v-if="detailData.discount>0" class="pill off" style="margin-left:auto">立省 {{ detailData.discount }}%</span>
+            </div>
+            <div class="detail-meta">
+              <div class="meta-item"><div class="k">文件格式</div><div class="v">{{ fileExt(detailData.original_filename) }}</div></div>
+              <div class="meta-item"><div class="k">文件大小</div><div class="v">{{ fmtSize(detailData.file_size) }}</div></div>
+              <div class="meta-item"><div class="k">下载次数</div><div class="v">{{ detailData.max_downloads }} 次</div></div>
+              <div class="meta-item"><div class="k">有效期</div><div class="v">{{ detailData.expire_hours }} 小时</div></div>
+            </div>
+            <div v-if="detailData.tags&&detailData.tags.length" class="tag-list">
+              <span v-for="t in detailData.tags" :key="t" class="tag"># {{ t }}</span>
+            </div>
+            <button class="btn btn-primary btn-block neon" style="height:48px;font-size:15px;margin-top:6px" @click="buyFromDetail">
+              立即购买 · ¥{{ fmtMoney(detailData.price) }}
+            </button>
+          </div>
+        </div>
+        <div class="detail-desc">
+          <h4 style="font-size:15px;margin:20px 0 8px;color:#fff">资源介绍</h4>
+          {{ detailData.description||'暂无详细介绍' }}
+        </div>
+        <div v-if="detailRelated.length" style="margin-top:26px">
+          <h4 style="font-size:15px;margin-bottom:14px;color:#fff">相关推荐</h4>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+            <div v-for="r in detailRelated" :key="r.uuid" class="card" @click="closeDetail();openDetail(r.uuid)">
+              <div class="card-thumb" :style="{background:catGrad(r.category)}" style="aspect-ratio:16/10">
+                <span class="ext" style="font-size:24px">{{ fileExt(r.original_filename) }}</span>
+              </div>
+              <div class="card-body" style="padding:10px 12px">
+                <h3 class="card-title" style="font-size:13px;min-height:36px;-webkit-line-clamp:2">{{ r.title }}</h3>
+                <div class="price">
+                  <span class="cur" style="font-size:12px">¥</span>
+                  <span class="num" style="font-size:16px">{{ fmtMoney(r.price) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 下单 ==================== -->
+  <div v-if="showCO" class="overlay" @click.self="closeCO">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>确认订单</h3>
+        <button class="modal-close" @click="closeCO">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="background:var(--surface-2);border-radius:12px;padding:18px;margin-bottom:18px">
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px">购买资源</div>
+          <div style="font-weight:700;font-size:15px;color:#fff">{{ coTitle }}</div>
+          <div style="margin-top:10px;display:flex;align-items:baseline;gap:6px">
+            <span style="color:#f87171;font-weight:700">¥</span>
+            <span style="font-size:30px;font-weight:900;color:#f87171">{{ fmtMoney(coPrice) }}</span>
+          </div>
+        </div>
+        <div style="margin-bottom:18px">
+          <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">邮箱（选填）</label>
+          <input v-model="coEmail" type="email" placeholder="you@example.com" style="width:100%;height:44px;padding:0 14px;border:2px solid rgba(255,255,255,0.08);border-radius:10px;background:var(--surface);outline:none;color:var(--text)">
+        </div>
+        <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:18px">下单后请使用支付宝扫码支付，支付成功后即可获得下载链接。</p>
+        <button class="btn btn-primary btn-block neon" style="height:48px" :disabled="coLoading" @click="createCO">
+          {{ coLoading?'创建订单中…':'确认并支付 ¥'+fmtMoney(coPrice) }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 扫码支付 ==================== -->
+  <div v-if="showQR" class="overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>扫码支付</h3>
+        <button class="modal-close" @click="cancelCO">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align:center">
+        <div class="pay-amount">¥{{ fmtMoney(qrData.amount) }}</div>
+        <div class="qr-box neon"><img :src="qrData.qr_code" alt="支付二维码"></div>
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px">请使用<b style="color:#1677ff"> 支付宝 </b>扫描上方二维码完成支付</div>
+        <div class="pay-tip"><div class="spinner"></div> 等待支付结果…</div>
+        <div style="margin-top:14px;font-size:12px;color:var(--text-muted)">订单号：{{ qrData.order_id }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 支付成功 ==================== -->
+  <div v-if="coSuccess" class="overlay">
+    <div class="modal">
+      <div class="modal-body" style="text-align:center;padding:34px 24px">
+        <div class="success-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:6px;color:#fff">支付成功！</h3>
+        <p style="color:var(--text-muted);margin-bottom:22px">感谢您的购买，现在可以下载资源了。</p>
+        <button class="btn btn-primary btn-block neon" style="height:48px" @click="goDownload">前往下载</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 用户中心 ==================== -->
+  <div v-if="showUC" class="overlay" @click.self="closeUC">
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <h3>我的订单</h3>
+        <button class="modal-close" @click="closeUC">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" style="padding:0;max-height:60vh;overflow-y:auto">
+        <div v-if="ucLoading" style="padding:50px;text-align:center"><div class="spinner" style="margin:0 auto"></div></div>
+        <div v-else-if="ucOrders.length===0" class="empty"><h3>暂无订单</h3><p>快去挑选心仪的资源吧</p></div>
+        <div v-else class="table-wrap" style="border:none;border-radius:0">
+          <table>
+            <thead><tr><th>资源</th><th>金额</th><th>状态</th><th>下载</th><th>下单时间</th><th></th></tr></thead>
+            <tbody>
+              <tr v-for="o in ucOrders" :key="o.id">
+                <td style="max-width:200px">
+                  <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff">{{ o.product_title }}</div>
+                  <div style="font-size:11px;color:var(--text-muted)">{{ o.order_id }}</div>
+                </td>
+                <td style="color:#f87171;font-weight:700">¥{{ fmtMoney(o.amount) }}</td>
+                <td><span class="pill" :class="o.status==='paid'?'paid':o.status==='pending'?'pending':'cancelled'">{{ o.status==='paid'?'已支付':o.status==='pending'?'待支付':o.status }}</span></td>
+                <td>{{ o.download_count }}/{{ o.max_downloads }}</td>
+                <td style="font-size:12px;color:var(--text-muted);white-space:nowrap">{{ fmtDate(o.created_at) }}</td>
+                <td><button v-if="o.status==='paid'" class="btn btn-soft btn-sm" @click="reDL(o.id)">重新下载</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-if="ucPages>1" class="pagination" style="margin:16px">
+          <button :disabled="ucPage<=1" @click="ucGo(ucPage-1)">上一页</button>
+          <button class="active">{{ ucPage }} / {{ ucPages }}</button>
+          <button :disabled="ucPage>=ucPages" @click="ucGo(ucPage+1)">下一页</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toasts"></div>
+</div>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+<script>
+const _0x29b639 = _0x5134;
+(function (_0x2f1d64, _0x243475) {
+    const _0x4c8267 = _0x5134, _0x273981 = _0x2f1d64();
+    while (!![]) {
+        try {
+            const _0x1dea4c = parseInt(_0x4c8267(0x135)) / (0xbe * 0x16 + -0x3da + -0x1f * 0x67) + -parseInt(_0x4c8267(0x2dc)) / (-0x4 * -0x379 + -0x1ab + -0x1 * 0xc37) + parseInt(_0x4c8267(0x26b)) / (-0x2166 + 0x29c * 0x3 + 0x1995) + -parseInt(_0x4c8267(0x1d8)) / (0x1 * 0x601 + 0x6a4 + -0xca1) * (-parseInt(_0x4c8267(0x338)) / (0x170c + -0x68d * 0x5 + -0xa6 * -0xf)) + -parseInt(_0x4c8267(0x175)) / (0x2 * 0x136f + 0xe74 + -0x354c) * (-parseInt(_0x4c8267(0x1a6)) / (-0xd5 * 0x25 + -0xb3c + 0x9 * 0x4ac)) + -parseInt(_0x4c8267(0x376)) / (0x5e6 + 0x3 * 0x87e + 0x1f58 * -0x1) * (-parseInt(_0x4c8267(0x158)) / (-0xd * -0x2d4 + 0x7 * -0x397 + -0x1b * 0x6e)) + -parseInt(_0x4c8267(0x205)) / (-0x36 * 0x5b + -0x65 * -0x1f + 0x701);
+            if (_0x1dea4c === _0x243475)
+                break;
+            else
+                _0x273981['push'](_0x273981['shift']());
+        } catch (_0x36f73c) {
+            _0x273981['push'](_0x273981['shift']());
+        }
+    }
+}(_0x8089, 0x1bbbe + 0x8d3ab + 0x79ea), (function () {
+    const _0x2d69a7 = _0x5134, _0x51fd8a = {
+            'iCzew': function (_0x497f08, _0x305bd7) {
+                return _0x497f08 < _0x305bd7;
+            },
+            'dFbfm': function (_0x57fbf8, _0x40d6ba) {
+                return _0x57fbf8 * _0x40d6ba;
+            },
+            'uePSP': function (_0x3d65ab, _0x530186) {
+                return _0x3d65ab + _0x530186;
+            },
+            'SQVeL': function (_0x32171f, _0x578450) {
+                return _0x32171f * _0x578450;
+            },
+            'yCFVi': function (_0x316b40, _0x34c33e) {
+                return _0x316b40 * _0x34c33e;
+            },
+            'VFzDw': _0x2d69a7(0x32e) + _0x2d69a7(0x192),
+            'cszMO': function (_0x1ef3ab, _0x560226) {
+                return _0x1ef3ab + _0x560226;
+            },
+            'afuLI': _0x2d69a7(0x388) + _0x2d69a7(0x313),
+            'hPkqT': function (_0x98fa97, _0x3bd61e) {
+                return _0x98fa97 * _0x3bd61e;
+            },
+            'SxRhU': function (_0x186506, _0x4ac553) {
+                return _0x186506 * _0x4ac553;
+            },
+            'aWWID': function (_0x5d3077, _0x4e6628) {
+                return _0x5d3077 > _0x4e6628;
+            },
+            'Sjvnv': function (_0x39e146, _0x215bbb) {
+                return _0x39e146(_0x215bbb);
+            },
+            'NpXSj': _0x2d69a7(0x274),
+            'jzZhL': _0x2d69a7(0x155) + 'as',
+            'cohrp': _0x2d69a7(0x120) + _0x2d69a7(0x1de) + _0x2d69a7(0x1d7) + _0x2d69a7(0x143) + _0x2d69a7(0x309) + _0x2d69a7(0x181) + _0x2d69a7(0x19a) + _0x2d69a7(0x1d3) + ';',
+            'mysmP': _0x2d69a7(0x140),
+            'gETfz': function (_0x4b91d4) {
+                return _0x4b91d4();
+            },
+            'ggDUI': function (_0x5bb099) {
+                return _0x5bb099();
+            }
+        }, _0x459673 = document[_0x2d69a7(0x214) + _0x2d69a7(0x2a0)](_0x51fd8a[_0x2d69a7(0x18f)]);
+    _0x459673['id'] = _0x51fd8a[_0x2d69a7(0x14e)], _0x459673[_0x2d69a7(0x3a5)][_0x2d69a7(0x15c)] = _0x51fd8a[_0x2d69a7(0x364)], document[_0x2d69a7(0x3a7)][_0x2d69a7(0x363) + 'd'](_0x459673);
+    const _0x3d7cd8 = _0x459673[_0x2d69a7(0x3b0)]('2d');
+    let _0xfa64f = [];
+    function _0x2ae0b4() {
+        const _0x5b724d = _0x2d69a7;
+        _0x459673[_0x5b724d(0x11f)] = window[_0x5b724d(0x310)], _0x459673[_0x5b724d(0x333)] = window[_0x5b724d(0x1fa) + 't'], _0xfa64f = [];
+        for (let _0x2af3e0 = -0xe82 + -0x240a + 0x287 * 0x14; _0x51fd8a[_0x5b724d(0x18c)](_0x2af3e0, 0x17ed + -0x131d + -0x408); _0x2af3e0++) {
+            _0xfa64f[_0x5b724d(0x280)]({
+                'x': _0x51fd8a[_0x5b724d(0x218)](Math[_0x5b724d(0x267)](), _0x459673[_0x5b724d(0x11f)]),
+                'y': _0x51fd8a[_0x5b724d(0x218)](Math[_0x5b724d(0x267)](), _0x459673[_0x5b724d(0x333)]),
+                'radius': _0x51fd8a[_0x5b724d(0x218)](Math[_0x5b724d(0x267)](), 0x914 + 0x1 * -0xed5 + 0x5c3),
+                'alpha': Math[_0x5b724d(0x267)](),
+                'speed': _0x51fd8a[_0x5b724d(0x39c)](_0x51fd8a[_0x5b724d(0x37c)](Math[_0x5b724d(0x267)](), 0x17d1 * 0x1 + -0x74f * 0x2 + -0x933 + 0.5), 0x1691 * 0x1 + 0x72a + -0x3 * 0x9e9 + 0.1),
+                'twinkleSpeed': _0x51fd8a[_0x5b724d(0x39c)](_0x51fd8a[_0x5b724d(0x37a)](Math[_0x5b724d(0x267)](), -0x9 * -0x4f + -0x1 * -0xeae + -0x29 * 0x6d + 0.02), 0x1361 + -0x15f + -0x1202 + 0.005)
+            });
+        }
+    }
+    function _0x71ae39() {
+        const _0x2278b8 = _0x2d69a7, _0xf9235c = {
+                'oBWmC': _0x51fd8a[_0x2278b8(0x1e4)],
+                'zadol': function (_0x59fad2, _0x3be8ef) {
+                    const _0x29505e = _0x2278b8;
+                    return _0x51fd8a[_0x29505e(0x18c)](_0x59fad2, _0x3be8ef);
+                },
+                'RRmCa': function (_0x194e1b, _0x40f2aa) {
+                    const _0x382994 = _0x2278b8;
+                    return _0x51fd8a[_0x382994(0x161)](_0x194e1b, _0x40f2aa);
+                },
+                'qQvaX': function (_0x340ffc, _0x5ad622) {
+                    const _0x116c1d = _0x2278b8;
+                    return _0x51fd8a[_0x116c1d(0x161)](_0x340ffc, _0x5ad622);
+                },
+                'cMnsW': _0x51fd8a[_0x2278b8(0x212)],
+                'WfeKC': function (_0x28222f, _0x53f6c7) {
+                    const _0x180c2e = _0x2278b8;
+                    return _0x51fd8a[_0x180c2e(0x2f0)](_0x28222f, _0x53f6c7);
+                },
+                'QLUkC': function (_0x2506c3, _0x51b5b9) {
+                    const _0x2b0837 = _0x2278b8;
+                    return _0x51fd8a[_0x2b0837(0x18c)](_0x2506c3, _0x51b5b9);
+                },
+                'HFBEp': function (_0x4cd06b, _0x154b51) {
+                    const _0x394262 = _0x2278b8;
+                    return _0x51fd8a[_0x394262(0x2f0)](_0x4cd06b, _0x154b51);
+                },
+                'BUAJx': function (_0xb00cbf, _0x411a3e) {
+                    const _0x3eb9b6 = _0x2278b8;
+                    return _0x51fd8a[_0x3eb9b6(0x314)](_0xb00cbf, _0x411a3e);
+                },
+                'iBhjc': function (_0x4abc46, _0x1ba804) {
+                    const _0x2ac7fe = _0x2278b8;
+                    return _0x51fd8a[_0x2ac7fe(0x16d)](_0x4abc46, _0x1ba804);
+                }
+            };
+        _0x3d7cd8[_0x2278b8(0x2a9)](-0x87d * 0x3 + 0x6f7 * -0x2 + 0x2765, 0xa1c + -0xd74 + 0x358, _0x459673[_0x2278b8(0x11f)], _0x459673[_0x2278b8(0x333)]), _0xfa64f[_0x2278b8(0x35c)](_0x262389 => {
+            const _0x3954b5 = _0x2278b8, _0x2f3429 = _0xf9235c[_0x3954b5(0x371)][_0x3954b5(0x2a1)]('|');
+            let _0x128e80 = 0x1fca + -0x31c * 0x5 + -0x103e;
+            while (!![]) {
+                switch (_0x2f3429[_0x128e80++]) {
+                case '0':
+                    if (_0xf9235c[_0x3954b5(0x15a)](_0x262389[_0x3954b5(0x39b)], 0x230e + -0x3d * 0x95 + 0x73))
+                        _0x262389[_0x3954b5(0x39b)] = -0x22f * -0x8 + -0x267f + 0x1507;
+                    continue;
+                case '1':
+                    _0x3d7cd8[_0x3954b5(0x178)] = _0xf9235c[_0x3954b5(0x35f)](_0xf9235c[_0x3954b5(0x15f)](_0xf9235c[_0x3954b5(0x240)], _0x262389[_0x3954b5(0x39b)]), ')');
+                    continue;
+                case '2':
+                    _0x3d7cd8[_0x3954b5(0x124)](_0x262389['x'], _0x262389['y'], _0x262389[_0x3954b5(0x381)], -0x2 * -0xe78 + 0x135d + -0x304d, _0xf9235c[_0x3954b5(0x151)](Math['PI'], -0x11 * 0x166 + 0x1 * -0x19ef + -0x485 * -0xb));
+                    continue;
+                case '3':
+                    _0x262389['y'] -= _0x262389[_0x3954b5(0x247)];
+                    continue;
+                case '4':
+                    _0xf9235c[_0x3954b5(0x3ac)](_0x262389['y'], 0x37 * 0xd + -0x2 * -0x1223 + -0x2711) && (_0x262389['y'] = _0x459673[_0x3954b5(0x333)], _0x262389['x'] = _0xf9235c[_0x3954b5(0x259)](Math[_0x3954b5(0x267)](), _0x459673[_0x3954b5(0x11f)]));
+                    continue;
+                case '5':
+                    _0x3d7cd8[_0x3954b5(0x3b2)]();
+                    continue;
+                case '6':
+                    _0x262389[_0x3954b5(0x39b)] += _0xf9235c[_0x3954b5(0x36a)](_0x262389[_0x3954b5(0x26d) + 'ed'], _0xf9235c[_0x3954b5(0x2b4)](Math[_0x3954b5(0x267)](), -0x14ea + 0x5 * 0x7a7 + -0x1159 + 0.5) ? 0x585 * -0x4 + -0x12f4 * -0x1 + 0x59 * 0x9 : -(-0x1735 * -0x1 + -0x45 * -0x2c + -0x2310));
+                    continue;
+                case '7':
+                    _0x3d7cd8[_0x3954b5(0x374)]();
+                    continue;
+                case '8':
+                    if (_0xf9235c[_0x3954b5(0x2b4)](_0x262389[_0x3954b5(0x39b)], -0x1 * -0x88f + -0x1 * -0xad6 + -0x1364 * 0x1))
+                        _0x262389[_0x3954b5(0x39b)] = -0x1796 * -0x1 + -0x1d * 0x17 + -0x14fa;
+                    continue;
+                }
+                break;
+            }
+        }), _0x51fd8a[_0x2278b8(0x319)](requestAnimationFrame, _0x71ae39);
+    }
+    window[_0x2d69a7(0x1bf) + _0x2d69a7(0x1a4)](_0x51fd8a[_0x2d69a7(0x321)], _0x2ae0b4), _0x51fd8a[_0x2d69a7(0x365)](_0x2ae0b4), _0x51fd8a[_0x2d69a7(0x34b)](_0x71ae39);
+}()), (function () {
+    const _0xeeba3f = _0x5134, _0x245492 = {
+            'PdWUu': _0xeeba3f(0x396),
+            'AFkbe': _0xeeba3f(0x38d) + 'js',
+            'XqJIY': _0xeeba3f(0x120) + _0xeeba3f(0x1de) + _0xeeba3f(0x1d7) + _0xeeba3f(0x143) + _0xeeba3f(0x309) + _0xeeba3f(0x181) + _0xeeba3f(0x19a) + _0xeeba3f(0x1d3) + ';',
+            'iLiyJ': function (_0x5931e3, _0x3df521) {
+                return _0x5931e3 !== _0x3df521;
+            },
+            'Jciow': _0xeeba3f(0x2c5),
+            'noBsX': function (_0x16721d, _0x271ccc, _0x3e0788) {
+                return _0x16721d(_0x271ccc, _0x3e0788);
+            },
+            'fdzII': _0xeeba3f(0x12a),
+            'tiYIp': _0xeeba3f(0x144),
+            'PPXyF': _0xeeba3f(0x2ee),
+            'lkKIE': _0xeeba3f(0x389),
+            'NYjIZ': _0xeeba3f(0x246),
+            'ZizQM': _0xeeba3f(0x35a),
+            'tQTyu': _0xeeba3f(0x223),
+            'vOrpj': _0xeeba3f(0x274),
+            'NNzRW': _0xeeba3f(0x329),
+            'NQOLU': _0xeeba3f(0x280)
+        }, _0x467a8c = document[_0xeeba3f(0x214) + _0xeeba3f(0x2a0)](_0x245492[_0xeeba3f(0x2b2)]);
+    _0x467a8c['id'] = _0x245492[_0xeeba3f(0x348)], _0x467a8c[_0xeeba3f(0x3a5)][_0xeeba3f(0x15c)] = _0x245492[_0xeeba3f(0x177)], document[_0xeeba3f(0x3a7)][_0xeeba3f(0x363) + 'd'](_0x467a8c), _0x245492[_0xeeba3f(0x24c)](typeof particlesJS, _0x245492[_0xeeba3f(0x1be)]) && _0x245492[_0xeeba3f(0x3b8)](particlesJS, _0x245492[_0xeeba3f(0x348)], {
+        'particles': {
+            'number': {
+                'value': 0x3c,
+                'density': {
+                    'enable': !![],
+                    'value_area': 0x320
+                }
+            },
+            'color': {
+                'value': [
+                    _0x245492[_0xeeba3f(0x13c)],
+                    _0x245492[_0xeeba3f(0x3a3)],
+                    _0x245492[_0xeeba3f(0x1e5)],
+                    _0x245492[_0xeeba3f(0x34f)]
+                ]
+            },
+            'shape': { 'type': _0x245492[_0xeeba3f(0x340)] },
+            'opacity': {
+                'value': 0.3,
+                'random': !![],
+                'anim': {
+                    'enable': !![],
+                    'speed': 0x1,
+                    'opacity_min': 0.1
+                }
+            },
+            'size': {
+                'value': 0x2,
+                'random': !![],
+                'anim': {
+                    'enable': !![],
+                    'speed': 0x2,
+                    'size_min': 0.1
+                }
+            },
+            'line_linked': {
+                'enable': !![],
+                'distance': 0x96,
+                'color': _0x245492[_0xeeba3f(0x13c)],
+                'opacity': 0.15,
+                'width': 0x1
+            },
+            'move': {
+                'enable': !![],
+                'speed': 1.5,
+                'direction': _0x245492[_0xeeba3f(0x315)],
+                'random': !![],
+                'straight': ![],
+                'out_mode': _0x245492[_0xeeba3f(0x3af)]
+            }
+        },
+        'interactivity': {
+            'detect_on': _0x245492[_0xeeba3f(0x22a)],
+            'events': {
+                'onhover': {
+                    'enable': !![],
+                    'mode': _0x245492[_0xeeba3f(0x3b6)]
+                },
+                'onclick': {
+                    'enable': !![],
+                    'mode': _0x245492[_0xeeba3f(0x2e5)]
+                }
+            },
+            'modes': {
+                'repulse': {
+                    'distance': 0x50,
+                    'duration': 0.4
+                },
+                'push': { 'particles_nb': 0x3 }
+            }
+        },
+        'retina_detect': !![]
+    });
+}()));
+if (typeof AOS !== _0x29b639(0x2c5))
+    AOS[_0x29b639(0x30d)]({
+        'duration': 0x320,
+        'easing': _0x29b639(0x276) + 't',
+        'once': !![],
+        'mirror': ![],
+        'offset': 0x32
+    });
+const {createApp} = Vue;
+function fmtSize(_0x15c55d) {
+    const _0x3b12db = _0x29b639, _0x2e5123 = {
+            'FYvRY': _0x3b12db(0x159),
+            'oZuSk': function (_0x2a69a3, _0x27f035) {
+                return _0x2a69a3 < _0x27f035;
+            },
+            'psUDg': function (_0xe7b13e, _0x351c05) {
+                return _0xe7b13e + _0x351c05;
+            },
+            'nnyWh': function (_0x4d2bd8, _0x51f839) {
+                return _0x4d2bd8 + _0x51f839;
+            },
+            'DcyBi': function (_0x110818, _0x1dc8d2) {
+                return _0x110818 / _0x1dc8d2;
+            },
+            'Spufm': _0x3b12db(0x391),
+            'ZtOcj': function (_0x3d09a1, _0x319115) {
+                return _0x3d09a1(_0x319115);
+            },
+            'CrzvO': function (_0x391349, _0x269079) {
+                return _0x391349 < _0x269079;
+            },
+            'XfVAh': function (_0x3920d2, _0x5109ec) {
+                return _0x3920d2 + _0x5109ec;
+            },
+            'AUWlQ': _0x3b12db(0x2cf),
+            'EDPNG': function (_0x49cc16, _0x25399f) {
+                return _0x49cc16 < _0x25399f;
+            },
+            'BgDmP': function (_0xf7cef1, _0x45544b) {
+                return _0xf7cef1 + _0x45544b;
+            },
+            'TVZxn': function (_0x275586, _0x9ec60b) {
+                return _0x275586 / _0x9ec60b;
+            },
+            'XnBpq': _0x3b12db(0x197)
+        }, _0x2a13d4 = _0x2e5123[_0x3b12db(0x2b3)][_0x3b12db(0x2a1)]('|');
+    let _0x1eb320 = 0xc * 0x7a + -0x31c + -0x29c;
+    while (!![]) {
+        switch (_0x2a13d4[_0x1eb320++]) {
+        case '0':
+            if (_0x2e5123[_0x3b12db(0x2a7)](_0x15c55d, -0x2 * 0xa51 + -0x1520 + 0x2dc2))
+                return _0x2e5123[_0x3b12db(0x1dd)](_0x15c55d, '\x20B');
+            continue;
+        case '1':
+            return _0x2e5123[_0x3b12db(0x345)](_0x2e5123[_0x3b12db(0x210)](_0x15c55d, 0x1475 * -0x2d673 + -0x45b86ac2 + -0x1f * -0x62fa88f)[_0x3b12db(0x219)](-0x2546 + -0x17 * 0x17d + 0x4783), _0x2e5123[_0x3b12db(0x15e)]);
+        case '2':
+            _0x15c55d = _0x2e5123[_0x3b12db(0x1f6)](Number, _0x15c55d) || 0xbb6 + 0xb25 + -0x16db;
+            continue;
+        case '3':
+            if (_0x2e5123[_0x3b12db(0x327)](_0x15c55d, -0xf182 * 0x7c64 + -0x1e4ef8d7 + 0x35b * 0x3f140d))
+                return _0x2e5123[_0x3b12db(0x125)](_0x2e5123[_0x3b12db(0x210)](_0x15c55d, 0x11 * -0xe453 + 0x1 * -0xcd70f + 0x2c0092)[_0x3b12db(0x219)](-0x11d7 * -0x2 + 0x162a + -0x39d7), _0x2e5123[_0x3b12db(0x31d)]);
+            continue;
+        case '4':
+            if (_0x2e5123[_0x3b12db(0x372)](_0x15c55d, -0x17b409 * -0x1 + 0x2 * 0xdbedf + 0xae5 * -0x33b))
+                return _0x2e5123[_0x3b12db(0x1f8)](_0x2e5123[_0x3b12db(0x2cc)](_0x15c55d, 0x1604 + 0x1b9a + -0x2d9e)[_0x3b12db(0x219)](0x10c2 + -0x156d + 0x5c * 0xd), _0x2e5123[_0x3b12db(0x21f)]);
+            continue;
+        }
+        break;
+    }
+}
+function fmtDate(_0x598e86) {
+    const _0x118c24 = _0x29b639, _0x3b84b7 = {
+            'uLjVi': function (_0x483711, _0x3410e5) {
+                return _0x483711(_0x3410e5);
+            },
+            'Ipawh': function (_0x2cc073, _0x3eb52d) {
+                return _0x2cc073 + _0x3eb52d;
+            },
+            'daFeU': function (_0x2942ba, _0x10e14c) {
+                return _0x2942ba + _0x10e14c;
+            },
+            'WDJGt': function (_0xa7fd35, _0x55c657) {
+                return _0xa7fd35 + _0x55c657;
+            },
+            'UllMK': function (_0xd9ecc7, _0x3fa8e7) {
+                return _0xd9ecc7 + _0x3fa8e7;
+            },
+            'ZObqE': function (_0x461efc, _0x5bbc57) {
+                return _0x461efc + _0x5bbc57;
+            },
+            'ZgKzL': function (_0x13ee09, _0x4c3a5b) {
+                return _0x13ee09 + _0x4c3a5b;
+            },
+            'pmcqa': function (_0x4f5420, _0x44a2fe) {
+                return _0x4f5420 + _0x44a2fe;
+            },
+            'InCho': function (_0x386cf4, _0x20632d) {
+                return _0x386cf4 + _0x20632d;
+            },
+            'cYCxS': function (_0x1644a5, _0xf5ac0d) {
+                return _0x1644a5(_0xf5ac0d);
+            }
+        };
+    if (!_0x598e86)
+        return '—';
+    const _0x7cf6e1 = new Date(_0x598e86);
+    if (_0x3b84b7[_0x118c24(0x251)](isNaN, _0x7cf6e1))
+        return '—';
+    const _0x4f2dca = _0xb57911 => String(_0xb57911)[_0x118c24(0x25e)](0x1d0a + -0x114 * -0x11 + 0xbd7 * -0x4, '0');
+    return _0x3b84b7[_0x118c24(0x22d)](_0x3b84b7[_0x118c24(0x22d)](_0x3b84b7[_0x118c24(0x221)](_0x3b84b7[_0x118c24(0x2d4)](_0x3b84b7[_0x118c24(0x189)](_0x3b84b7[_0x118c24(0x272)](_0x3b84b7[_0x118c24(0x286)](_0x3b84b7[_0x118c24(0x234)](_0x7cf6e1[_0x118c24(0x38c) + 'r'](), '-'), _0x3b84b7[_0x118c24(0x251)](_0x4f2dca, _0x3b84b7[_0x118c24(0x28d)](_0x7cf6e1[_0x118c24(0x2a4)](), 0x1199 + -0x1eb * 0x10 + -0x4 * -0x346))), '-'), _0x3b84b7[_0x118c24(0x251)](_0x4f2dca, _0x7cf6e1[_0x118c24(0x30b)]())), '\x20'), _0x3b84b7[_0x118c24(0x251)](_0x4f2dca, _0x7cf6e1[_0x118c24(0x12f)]())), ':'), _0x3b84b7[_0x118c24(0x1b6)](_0x4f2dca, _0x7cf6e1[_0x118c24(0x153)]()));
+}
+function fmtMoney(_0x400575) {
+    const _0xc282f = _0x29b639, _0x259d08 = {
+            'IQTEq': function (_0x2222e9, _0x581b30) {
+                return _0x2222e9(_0x581b30);
+            }
+        };
+    return (_0x259d08[_0xc282f(0x141)](Number, _0x400575) || -0xe2b + -0x1ab2 + 0x28dd)[_0xc282f(0x219)](-0x1634 + 0xa * -0x1ab + 0x26e4);
+}
+function esc(_0x4adca6) {
+    const _0x39a244 = _0x29b639, _0x550c0a = {
+            'hmkTf': function (_0x567f18, _0x3767ad) {
+                return _0x567f18(_0x3767ad);
+            }
+        };
+    if (!_0x4adca6)
+        return '';
+    return _0x550c0a[_0x39a244(0x351)](String, _0x4adca6)[_0x39a244(0x377)](/[&<>"']/g, _0x24bcde => ({
+        '&': _0x39a244(0x302),
+        '<': _0x39a244(0x163),
+        '>': _0x39a244(0x303),
+        '\x22': _0x39a244(0x2b7),
+        '\x27': _0x39a244(0x359)
+    }[_0x24bcde]));
+}
+function fileExt(_0x36028b) {
+    const _0x2d9dec = _0x29b639, _0x50e2d1 = { 'xXwEP': _0x2d9dec(0x1f1) };
+    if (!_0x36028b)
+        return _0x50e2d1[_0x2d9dec(0x24b)];
+    return _0x36028b[_0x2d9dec(0x226)]('.') ? _0x36028b[_0x2d9dec(0x2a1)]('.')[_0x2d9dec(0x2fb)]()[_0x2d9dec(0x257) + 'e']() : _0x50e2d1[_0x2d9dec(0x24b)];
+}
+const CAT_COLORS = {
+    '电子书': [
+        _0x29b639(0x12a),
+        _0x29b639(0x1c0)
+    ],
+    '软件': [
+        _0x29b639(0x33c),
+        _0x29b639(0x317)
+    ],
+    '教程': [
+        _0x29b639(0x2ee),
+        _0x29b639(0x20b)
+    ],
+    '音频': [
+        _0x29b639(0x144),
+        _0x29b639(0x1c0)
+    ],
+    '图片': [
+        _0x29b639(0x389),
+        _0x29b639(0x2d0)
+    ],
+    '文档': [
+        _0x29b639(0x31a),
+        _0x29b639(0x198)
+    ],
+    '模板': [
+        _0x29b639(0x375),
+        _0x29b639(0x182)
+    ],
+    '源代码': [
+        _0x29b639(0x24f),
+        _0x29b639(0x1a0)
+    ],
+    '其他': [
+        _0x29b639(0x344),
+        _0x29b639(0x261)
+    ]
+};
+function _0x8089() {
+    const _0x55bc8f = [
+        'deBdz',
+        'dFbfm',
+        'toFixed',
+        'UdjsV',
+        'ath\x20d=\x22M20',
+        'troke-widt',
+        'Loading',
+        '/api/user/',
+        'XnBpq',
+        'checkUserA',
+        'daFeU',
+        'ShZbC',
+        'out',
+        'ZTFop',
+        'coSuccess',
+        'includes',
+        'OiNXD',
+        'scrollTo',
+        'WrVje',
+        'vOrpj',
+        'tcha',
+        'orders?pag',
+        'Ipawh',
+        'qrData',
+        '(30px)',
+        'RkFDx',
+        '&search=',
+        '全部资源',
+        'dlData',
+        'pmcqa',
+        'json',
+        'KFCnw',
+        '注册失败',
+        'TmqQS',
+        'applicatio',
+        'TqZnr',
+        'ZnOVk',
+        'elyOj',
+        'sBecJ',
+        'eswct',
+        '<path\x20d=\x22m',
+        'cMnsW',
+        'Nsnin',
+        '/create',
+        '下单失败',
+        'pKSEi',
+        '验证码已发送',
+        'circle',
+        'speed',
+        '0|2',
+        'paid',
+        'pollTimer',
+        'xXwEP',
+        'iLiyJ',
+        'KnYke',
+        '</span>',
+        '#334155',
+        'product',
+        'uLjVi',
+        'AKpvg',
+        'OqZqt',
+        'sLEla',
+        '<svg\x20viewB',
+        'zPpQs',
+        'toUpperCas',
+        'AnKIN',
+        'HFBEp',
+        'aXILw',
+        'phone',
+        'X-Captcha-',
+        'mock_code',
+        'padStart',
+        'mount',
+        'tkvTb',
+        '#475569',
+        '1|5|6|4|3|',
+        'KgjtP',
+        'status',
+        'pdowm',
+        'ZXwEO',
+        'random',
+        'kYveT',
+        'MFJXR',
+        'username',
+        '4146612VlhQbL',
+        'h=\x222.2\x22><p',
+        'twinkleSpe',
+        '3.7\x203.9a2\x20',
+        'Fygjy',
+        'newest',
+        'coDownload',
+        'ZObqE',
+        'KhcxE',
+        'canvas',
+        'OzYNS',
+        'ease-in-ou',
+        'TgKjE',
+        'PEUpu',
+        'regLoading',
+        '0\x200\x201.7\x203h',
+        'captcha',
+        'Nadmp',
+        '.3s',
+        'gQfCx',
+        'ElpXN',
+        'push',
+        '请输入手机号',
+        'PcIWC',
+        'YiOuO',
+        '/redirect?',
+        '</svg>',
+        'ZgKzL',
+        'userMenu',
+        'guxvP',
+        'th\x20d=\x22M12\x20',
+        'NOeNZ',
+        'MFNnP',
+        '\x22\x20r=\x2210\x22/>',
+        'InCho',
+        '2\x208h.01\x22/>',
+        'showCO',
+        'loginLoadi',
+        'Rnvak',
+        'smsCode',
+        '链接无效',
+        '__ctx',
+        'ucOrders',
+        'className',
+        'span',
+        'coTitle',
+        'FaYua',
+        'ion',
+        'bhoCW',
+        '&per_page=',
+        'PUT',
+        'mrjsH',
+        '请输入短信验证码',
+        'ent',
+        'split',
+        'products',
+        'dBxlC',
+        'getMonth',
+        'WdPGD',
+        '用户名至少\x203\x20个字',
+        'oZuSk',
+        'UWGfH',
+        'clearRect',
+        'Psluy',
+        'info',
+        'download_u',
+        'closeUC',
+        'url',
+        'qBcaZ',
+        'showDetail',
+        'twWTF',
+        'PdWUu',
+        'FYvRY',
+        'iBhjc',
+        'openCO',
+        'yslBI',
+        '&quot;',
+        'PrpDf',
+        'categories',
+        'WOonW',
+        'blob',
+        '/api/downl',
+        'QXNvs',
+        'haLoading',
+        'kldtP',
+        'price',
+        'BwUoq',
+        'loadCatego',
+        '注册成功，已自动登录',
+        'BazUv',
+        'undefined',
+        'charAt',
+        'YVKUN',
+        'code',
+        '\x200\x201.7-3L1',
+        '验证码已过期，请刷新',
+        '登录已过期，请重新登',
+        'TVZxn',
+        'startsWith',
+        'transition',
+        '\x20MB',
+        '#059669',
+        'VMCgS',
+        '\x22none\x22\x20str',
+        'vnrkE',
+        'WDJGt',
+        '无法下载',
+        'woqzF',
+        'ries',
+        'cNWYp',
+        'RnfAR',
+        'TyUQj',
+        '4\x200Z\x22/><pa',
+        '233946CGizhU',
+        '已退出登录',
+        'euNxy',
+        'BEgKd',
+        'OAAQC',
+        'kpPIe',
+        'JIPHn',
+        'openAuth',
+        'dlToken',
+        'NQOLU',
+        '发送失败',
+        'dPVnm',
+        'MizEi',
+        '0|1|2|5|3|',
+        'Bearer\x20',
+        'showQR',
+        '/svg>',
+        '\x2024\x22\x20fill=',
+        '#f59e0b',
+        'oeJqY',
+        'hPkqT',
+        'aYaHu',
+        'pDkJx',
+        'Jinct',
+        'coPrice',
+        'string',
+        'fnPhr',
+        'toasts',
+        'sazqv',
+        'post',
+        'loginUser',
+        'pop',
+        'Url',
+        'getItem',
+        'lIazK',
+        'PcIXR',
+        'CzADk',
+        'DekVd',
+        '&amp;',
+        '&gt;',
+        'AOS',
+        'view',
+        '请输入图形验证码',
+        'hash',
+        'YnGOF',
+        'eight:100%',
+        'faPUF',
+        'getDate',
+        'logout',
+        'init',
+        'order_id',
+        'pGaEX',
+        'innerWidth',
+        'MEMJj',
+        'detailData',
+        '55,255,',
+        'SxRhU',
+        'ZizQM',
+        '<span>',
+        '#2563eb',
+        'byeKN',
+        'Sjvnv',
+        '#14b8a6',
+        'password',
+        'CqLFF',
+        'AUWlQ',
+        'smooth',
+        'wkznd',
+        'iXcrf',
+        'mysmP',
+        'smsCountdo',
+        'download',
+        'yaRSh',
+        '图形验证码已过期',
+        '.3\x203.9\x201.8',
+        'CrzvO',
+        'ApATz',
+        'repulse',
+        'ath\x20d=\x22M10',
+        'startPoll',
+        'Ztgvr',
+        'token',
+        '6|8|0|3|4|',
+        'sGdeU',
+        'gibhr',
+        'RQgcr',
+        'uoahB',
+        'height',
+        'niRhu',
+        'EQAIe',
+        'NrvIE',
+        'lKUFw',
+        '2741475ahbePd',
+        '15\x209-6\x206M9',
+        'qqyIV',
+        'OwvrI',
+        '#0ea5e9',
+        'Iluul',
+        'innerHTML',
+        '#download/',
+        'NYjIZ',
+        '请输入用户名',
+        '搜索：',
+        'KfvSB',
+        '#64748b',
+        'nnyWh',
+        'remove',
+        'linear-gra',
+        'AFkbe',
+        '/api/categ',
+        'sms/send',
+        'ggDUI',
+        'abs',
+        'Content-Ty',
+        'ById',
+        'lkKIE',
+        'store',
+        'hmkTf',
+        '密码至少\x206\x20位',
+        'length',
+        'haImg',
+        'TAgic',
+        'gEDfk',
+        'pathname',
+        'qxMQa',
+        '&#39;',
+        'none',
+        'pHOyk',
+        'forEach',
+        'Ntyfl',
+        '/api/produ',
+        'RRmCa',
+        'Img',
+        'ndezu',
+        'pdBRK',
+        'appendChil',
+        'cohrp',
+        'gETfz',
+        '$nextTick',
+        'uUGOZ',
+        'eg,',
+        'XaWSL',
+        'BUAJx',
+        'detailRela',
+        'fsEhs',
+        'HKHuh',
+        'regUser',
+        'riAXL',
+        'vQShN',
+        'oBWmC',
+        'EDPNG',
+        '2\x200\x200\x200-3.',
+        'fill',
+        '#f43f5e',
+        '744EMyHKL',
+        'replace',
+        'refresh',
+        'IMzgg',
+        'yCFVi',
+        'DELETE',
+        'SQVeL',
+        'hashchange',
+        'ZwAUj',
+        'PwmvE',
+        'showDL',
+        'radius',
+        'loadUC',
+        'cnumk',
+        'grazR',
+        'GrTiD',
+        'mNLQd',
+        'removeItem',
+        'rgba(255,2',
+        '#10b981',
+        'AmlBN',
+        '\x206\x209\x2017l-5',
+        'getFullYea',
+        'particles-',
+        '手机号格式不正确',
+        '9v4M12\x2017h',
+        'loadRegCap',
+        '\x20GB',
+        'wyWVf',
+        'ing',
+        'transform',
+        'ox=\x220\x200\x2024',
+        'div',
+        'sIqaV',
+        'rBRBY',
+        'ircle\x20cx=\x22',
+        'page',
+        'alpha',
+        'uePSP',
+        'uuid',
+        'Xdwpl',
+        'sUjgB',
+        'coUuid',
+        'fetchCaptc',
+        'test',
+        'tiYIp',
+        'VVIEN',
+        'style',
+        'toast\x20',
+        'body',
+        'msg',
+        'isArray',
+        'JvNow',
+        '商品不存在',
+        'QLUkC',
+        'sGrfS',
+        'opacity',
+        'tQTyu',
+        'getContext',
+        'translateX',
+        'beginPath',
+        'POST',
+        'bIEBx',
+        'ucPage',
+        'NNzRW',
+        'HCGLk',
+        'noBsX',
+        'search',
+        'eGpNB',
+        'smsTimer',
+        'AtjGV',
+        'RzCWK',
+        'qACgP',
+        'EOxmY',
+        'ted',
+        'width',
+        'position:f',
+        'pdvzw',
+        'KijMD',
+        'RGsZP',
+        'arc',
+        'XfVAh',
+        'ZMbwD',
+        'success',
+        '\x2018a2\x202\x200\x20',
+        'bsAit',
+        '#6366f1',
+        'xAfzc',
+        '12\x22\x20cy=\x2212',
+        '登录失败',
+        'eaaPl',
+        'getHours',
+        'aptcha',
+        'cts?page=',
+        'NZaAO',
+        'UBpIM',
+        'sOOLg',
+        '514727eqHlxO',
+        'MFHgb',
+        'gsCMO',
+        'DIjyC',
+        'QYrEu',
+        '测试验证码已自动填入',
+        'MChXn',
+        'fdzII',
+        'XvvBC',
+        '支付超时',
+        'loginPwd',
+        'resize',
+        'IQTEq',
+        'sort',
+        'dth:100%;h',
+        '#ec4899',
+        'n/json',
+        'hwHLo',
+        'related',
+        'GROjO',
+        'dlError',
+        '17a2\x202\x200\x200',
+        'HAihF',
+        'Lswqe',
+        'regCaptcha',
+        'jzZhL',
+        'qKqCZ',
+        'uth',
+        'WfeKC',
+        'FTCby',
+        'getMinutes',
+        'WhUgw',
+        'stars-canv',
+        '加载失败',
+        'WjITy',
+        '6876WMVYjw',
+        '2|0|4|3|1',
+        'zadol',
+        'email',
+        'cssText',
+        'KurbJ',
+        'Spufm',
+        'qQvaX',
+        'FvYaI',
+        'cszMO',
+        'nickname',
+        '&lt;',
+        '验证码已过期',
+        'pFYwv',
+        'wPusL',
+        '#app',
+        'loginMode',
+        'pages',
+        'jqIgZ',
+        'loadProduc',
+        'OomOv',
+        'aWWID',
+        'FLJUT',
+        'sms/login',
+        'loadLoginC',
+        'replaceSta',
+        'DswuI',
+        'XEyFX',
+        '/check/',
+        '458610QWEWwC',
+        '请先登录',
+        'XqJIY',
+        'fillStyle',
+        'cid',
+        '-5\x22/></svg',
+        'total',
+        'WNJMQ',
+        'giiYZ',
+        'href',
+        'order/',
+        'smsSending',
+        ';z-index:0',
+        '#e11d48',
+        'loading',
+        'title',
+        'assign',
+        'oauth/',
+        '登录成功，欢迎回来！',
+        'YErmH',
+        'UllMK',
+        'data',
+        'JlghQ',
+        'iCzew',
+        'user',
+        'message',
+        'NpXSj',
+        'HTbuO',
+        'eqzKK',
+        '5|2|1|7',
+        'redirect=',
+        'authModal',
+        'RUwXC',
+        'login',
+        '\x20KB',
+        '#0891b2',
+        'BidYv',
+        ';pointer-e',
+        'dlLoading',
+        'OYKDT',
+        'getElement',
+        'headers',
+        'error',
+        '#0f172a',
+        'XKHNK',
+        'NBfde',
+        'Spsxc',
+        'stener',
+        'regPwd',
+        '35SludiK',
+        '/redownloa',
+        '请先输入图形验证码',
+        'sjOPE',
+        'dodMV',
+        '3|4|1|2|0',
+        'kyyvQ',
+        'LTcym',
+        'get',
+        'coLoading',
+        'oke=\x22curre',
+        'qSPRU',
+        'dDJRM',
+        'ACTWq',
+        'parse',
+        'ulfiq',
+        'cYCxS',
+        '&sort=',
+        'kdhVQ',
+        'ctURL',
+        'QTyYp',
+        'KeKyp',
+        'yIzWv',
+        'Rxaee',
+        'Jciow',
+        'addEventLi',
+        '#8b5cf6',
+        '12\x2016v-4M1',
+        'ct/',
+        'NMrWI',
+        'dient(135d',
+        'redirect',
+        'LiBOQ',
+        'Hjeqs',
+        'haId',
+        'smsPhone',
+        'closeDetai',
+        'NUakJ',
+        'aemPC',
+        'orders',
+        '登录成功',
+        '/api/auth/',
+        'detailLoad',
+        'Authorizat',
+        'omit',
+        'vents:none',
+        '/api/order',
+        'LqaNg',
+        'uMGTl',
+        ';left:0;wi',
+        '8YSiKHC',
+        'rSUai',
+        'qjtsF',
+        'dFHSU',
+        'coEmail',
+        'psUDg',
+        'ixed;top:0',
+        'ucLoading',
+        'RddDU',
+        'vayqo',
+        'auth_token',
+        'QJwrR',
+        'VFzDw',
+        'PPXyF',
+        'SLiyx',
+        'createObje',
+        'MkyWY',
+        'ntColor\x22\x20s',
+        'vKsmK',
+        'CLbFZ',
+        'register',
+        '.01\x22/></sv',
+        'VOeLI',
+        'regPhone',
+        'ories',
+        'FILE',
+        'ucPages',
+        'simulated',
+        'TANVD',
+        'MYIUz',
+        'ZtOcj',
+        'warn',
+        'BgDmP',
+        'gAgPW',
+        'innerHeigh',
+        'Tuuav',
+        'setItem',
+        'vFxSd',
+        'showUC',
+        'cat',
+        'mCGnF',
+        'loginCaptc',
+        'ZHqrd',
+        'object',
+        'h=\x222.2\x22><c',
+        '26064920pLjSDT',
+        '12&categor',
+        'closeAuth',
+        'CDGjP',
+        'oad/page/',
+        'stringify',
+        '#ef4444',
+        'GRRkQ',
+        '<path\x20d=\x22M',
+        'YPRTI',
+        'qUGZu',
+        'DcyBi',
+        'req',
+        'afuLI',
+        'MPzII',
+        'createElem',
+        '请输入密码',
+        '\x209l6\x206\x22/><'
+    ];
+    _0x8089 = function () {
+        return _0x55bc8f;
+    };
+    return _0x8089();
+}
+function catGrad(_0x55470a) {
+    const _0x53dfe3 = _0x29b639, _0x271018 = {
+            'OYKDT': function (_0x42c347, _0x56302d) {
+                return _0x42c347 + _0x56302d;
+            },
+            'Hjeqs': function (_0x1e1bf3, _0x56e460) {
+                return _0x1e1bf3 + _0x56e460;
+            },
+            'wyWVf': function (_0x5e4a4f, _0x1905aa) {
+                return _0x5e4a4f + _0x1905aa;
+            },
+            'AtjGV': function (_0x364a9b, _0x47d888) {
+                return _0x364a9b + _0x47d888;
+            },
+            'Nadmp': _0x53dfe3(0x347) + _0x53dfe3(0x1c4) + _0x53dfe3(0x368)
+        }, _0xf64a8e = CAT_COLORS[_0x55470a] || CAT_COLORS['其他'];
+    return _0x271018[_0x53dfe3(0x19c)](_0x271018[_0x53dfe3(0x1c7)](_0x271018[_0x53dfe3(0x392)](_0x271018[_0x53dfe3(0x3bc)](_0x271018[_0x53dfe3(0x27c)], _0xf64a8e[0xe3 * 0x2b + 0x818 + -0x2e39]), ','), _0xf64a8e[0x137 * 0x1 + -0x223 * -0x3 + -0x79f]), ')');
+}
+const TOKEN_KEY = _0x29b639(0x1e2);
+function getToken() {
+    const _0x705845 = _0x29b639;
+    return localStorage[_0x705845(0x2fd)](TOKEN_KEY) || '';
+}
+function setToken(_0x1753e7) {
+    const _0x5d5123 = _0x29b639;
+    if (_0x1753e7)
+        localStorage[_0x5d5123(0x1fc)](TOKEN_KEY, _0x1753e7);
+    else
+        localStorage[_0x5d5123(0x387)](TOKEN_KEY);
+}
+const api = {
+        'req': async function (_0x4d649f, _0x1b5dbc) {
+            const _0x4db0b2 = _0x29b639, _0x85d81c = {
+                    'sazqv': function (_0x13e4d6, _0x46cb27) {
+                        return _0x13e4d6 || _0x46cb27;
+                    },
+                    'dBxlC': _0x4db0b2(0x239) + _0x4db0b2(0x145),
+                    'hwHLo': function (_0x515f0e) {
+                        return _0x515f0e();
+                    },
+                    'PEUpu': _0x4db0b2(0x1d1) + _0x4db0b2(0x29a),
+                    'OzYNS': function (_0x15c64b, _0x4b2c4c) {
+                        return _0x15c64b + _0x4b2c4c;
+                    },
+                    'VOeLI': _0x4db0b2(0x2ea),
+                    'OAAQC': function (_0x3737fe, _0x2d2e78) {
+                        return _0x3737fe !== _0x2d2e78;
+                    },
+                    'ulfiq': _0x4db0b2(0x2f5),
+                    'eqzKK': function (_0x5cdcf2, _0xa6cbbe) {
+                        return _0x5cdcf2 instanceof _0xa6cbbe;
+                    },
+                    'RddDU': _0x4db0b2(0x34d) + 'pe',
+                    'Psluy': function (_0x162f09, _0x38a570, _0x3f12d3) {
+                        return _0x162f09(_0x38a570, _0x3f12d3);
+                    },
+                    'IMzgg': function (_0x172074, _0x23746e) {
+                        return _0x172074 === _0x23746e;
+                    },
+                    'mrjsH': function (_0x58f1b0, _0x12c424) {
+                        return _0x58f1b0(_0x12c424);
+                    },
+                    'Tuuav': _0x4db0b2(0x18d),
+                    'iXcrf': function (_0x4dee4b, _0x3b6b19) {
+                        return _0x4dee4b !== _0x3b6b19;
+                    },
+                    'FvYaI': function (_0x36f2f5, _0x2a03ec) {
+                        return _0x36f2f5 === _0x2a03ec;
+                    },
+                    'sjOPE': function (_0x4a1736, _0x46882b) {
+                        return _0x4a1736 !== _0x46882b;
+                    },
+                    'Rnvak': function (_0x443c5c, _0x39507b) {
+                        return _0x443c5c === _0x39507b;
+                    },
+                    'qxMQa': _0x4db0b2(0x203)
+                };
+            _0x1b5dbc = _0x85d81c[_0x4db0b2(0x2f8)](_0x1b5dbc, {});
+            const _0x3f4be9 = Object[_0x4db0b2(0x185)]({ 'Content-Type': _0x85d81c[_0x4db0b2(0x2a3)] }, _0x1b5dbc[_0x4db0b2(0x19e)] || {}), _0x2b9836 = _0x85d81c[_0x4db0b2(0x146)](getToken);
+            if (_0x2b9836)
+                _0x3f4be9[_0x85d81c[_0x4db0b2(0x278)]] = _0x85d81c[_0x4db0b2(0x275)](_0x85d81c[_0x4db0b2(0x1ee)], _0x2b9836);
+            const _0x3563dd = Object[_0x4db0b2(0x185)]({ 'headers': _0x3f4be9 }, _0x1b5dbc);
+            _0x3563dd[_0x4db0b2(0x3a7)] && _0x85d81c[_0x4db0b2(0x2e0)](typeof _0x3563dd[_0x4db0b2(0x3a7)], _0x85d81c[_0x4db0b2(0x1b5)]) && !_0x85d81c[_0x4db0b2(0x191)](_0x3563dd[_0x4db0b2(0x3a7)], FormData) && (_0x3563dd[_0x4db0b2(0x3a7)] = JSON[_0x4db0b2(0x20a)](_0x3563dd[_0x4db0b2(0x3a7)]));
+            if (_0x85d81c[_0x4db0b2(0x191)](_0x3563dd[_0x4db0b2(0x3a7)], FormData))
+                delete _0x3563dd[_0x4db0b2(0x19e)][_0x85d81c[_0x4db0b2(0x1e0)]];
+            const _0x4bdbf0 = await _0x85d81c[_0x4db0b2(0x2aa)](fetch, +_0x4d649f, _0x3563dd);
+            _0x85d81c[_0x4db0b2(0x379)](_0x4bdbf0[_0x4db0b2(0x264)], -0x15d8 + -0x5 * 0x1bb + 0x2010) && (_0x85d81c[_0x4db0b2(0x29e)](setToken, ''), localStorage[_0x4db0b2(0x387)](_0x85d81c[_0x4db0b2(0x1fb)]), window[_0x4db0b2(0x294)] && (window[_0x4db0b2(0x294)][_0x4db0b2(0x18d)] = null));
+            let _0x3e5218 = null;
+            try {
+                _0x3e5218 = await _0x4bdbf0[_0x4db0b2(0x235)]();
+            } catch (_0x1f0736) {
+                _0x3e5218 = {};
+            }
+            return _0x3e5218 && _0x85d81c[_0x4db0b2(0x320)](_0x3e5218[_0x4db0b2(0x2c8)], undefined) && _0x85d81c[_0x4db0b2(0x379)](_0x3e5218[_0x4db0b2(0x127)], undefined) && (_0x3e5218[_0x4db0b2(0x127)] = _0x85d81c[_0x4db0b2(0x160)](_0x3e5218[_0x4db0b2(0x2c8)], -0x1 * -0x971 + -0xb * -0x3d + -0xc10), _0x3e5218[_0x4db0b2(0x18e)] = _0x3e5218[_0x4db0b2(0x3a8)] || '', _0x85d81c[_0x4db0b2(0x1a9)](_0x3e5218[_0x4db0b2(0x18a)], undefined) && _0x85d81c[_0x4db0b2(0x291)](typeof _0x3e5218[_0x4db0b2(0x18a)], _0x85d81c[_0x4db0b2(0x358)]) && _0x85d81c[_0x4db0b2(0x1a9)](_0x3e5218[_0x4db0b2(0x18a)], null) && !Array[_0x4db0b2(0x3a9)](_0x3e5218[_0x4db0b2(0x18a)]) && Object[_0x4db0b2(0x185)](_0x3e5218, _0x3e5218[_0x4db0b2(0x18a)])), {
+                'ok': _0x4bdbf0['ok'],
+                'status': _0x4bdbf0[_0x4db0b2(0x264)],
+                'data': _0x3e5218
+            };
+        },
+        'get': function (_0x98da4c) {
+            const _0x487c33 = _0x29b639;
+            return this[_0x487c33(0x211)](_0x98da4c);
+        },
+        'post': function (_0x5de532, _0xfca20) {
+            const _0x3c4beb = _0x29b639, _0x53e6d7 = {
+                    'VVIEN': _0x3c4beb(0x3b3),
+                    'uMGTl': function (_0x1967f8, _0x3fe967) {
+                        return _0x1967f8 || _0x3fe967;
+                    }
+                };
+            return this[_0x3c4beb(0x211)](_0x5de532, {
+                'method': _0x53e6d7[_0x3c4beb(0x3a4)],
+                'body': _0x53e6d7[_0x3c4beb(0x1d6)](_0xfca20, {})
+            });
+        },
+        'put': function (_0x55f7c1, _0x80c74c) {
+            const _0x582ee8 = _0x29b639, _0x279f4e = {
+                    'xAfzc': _0x582ee8(0x29d),
+                    'pdowm': function (_0xcb3675, _0x325366) {
+                        return _0xcb3675 || _0x325366;
+                    }
+                };
+            return this[_0x582ee8(0x211)](_0x55f7c1, {
+                'method': _0x279f4e[_0x582ee8(0x12b)],
+                'body': _0x279f4e[_0x582ee8(0x265)](_0x80c74c, {})
+            });
+        },
+        'del': function (_0x59677a) {
+            const _0x9c363b = _0x29b639, _0x526b46 = { 'YPRTI': _0x9c363b(0x37b) };
+            return this[_0x9c363b(0x211)](_0x59677a, { 'method': _0x526b46[_0x9c363b(0x20e)] });
+        }
+    }, ICONS = {
+        'success': _0x29b639(0x255) + _0x29b639(0x395) + _0x29b639(0x2ed) + _0x29b639(0x2d2) + _0x29b639(0x1b0) + _0x29b639(0x1e9) + _0x29b639(0x21c) + _0x29b639(0x26c) + _0x29b639(0x21b) + _0x29b639(0x38b) + _0x29b639(0x17a) + '>',
+        'error': _0x29b639(0x255) + _0x29b639(0x395) + _0x29b639(0x2ed) + _0x29b639(0x2d2) + _0x29b639(0x1b0) + _0x29b639(0x1e9) + _0x29b639(0x21c) + _0x29b639(0x204) + _0x29b639(0x399) + _0x29b639(0x12c) + _0x29b639(0x28c) + _0x29b639(0x23f) + _0x29b639(0x339) + _0x29b639(0x216) + _0x29b639(0x2ec),
+        'warn': _0x29b639(0x255) + _0x29b639(0x395) + _0x29b639(0x2ed) + _0x29b639(0x2d2) + _0x29b639(0x1b0) + _0x29b639(0x1e9) + _0x29b639(0x21c) + _0x29b639(0x26c) + _0x29b639(0x32a) + _0x29b639(0x326) + _0x29b639(0x128) + _0x29b639(0x27a) + _0x29b639(0x14a) + _0x29b639(0x2c9) + _0x29b639(0x26e) + _0x29b639(0x373) + _0x29b639(0x2db) + _0x29b639(0x289) + _0x29b639(0x38f) + _0x29b639(0x1ed) + 'g>',
+        'info': _0x29b639(0x255) + _0x29b639(0x395) + _0x29b639(0x2ed) + _0x29b639(0x2d2) + _0x29b639(0x1b0) + _0x29b639(0x1e9) + _0x29b639(0x21c) + _0x29b639(0x204) + _0x29b639(0x399) + _0x29b639(0x12c) + _0x29b639(0x28c) + _0x29b639(0x20d) + _0x29b639(0x1c1) + _0x29b639(0x28e) + _0x29b639(0x285)
+    };
+function toast(_0x1868fc, _0x147094) {
+    const _0x49f33c = _0x29b639, _0x42ebc1 = {
+            'pdBRK': _0x49f33c(0x27d),
+            'VMCgS': _0x49f33c(0x3b1) + _0x49f33c(0x22f),
+            'WhUgw': function (_0x1f6a06, _0x3a96b2, _0x2f6433) {
+                return _0x1f6a06(_0x3a96b2, _0x2f6433);
+            },
+            'Fygjy': function (_0xdf4241, _0x26ed66) {
+                return _0xdf4241 || _0x26ed66;
+            },
+            'vayqo': _0x49f33c(0x2ab),
+            'TgKjE': _0x49f33c(0x2f7),
+            'Nsnin': _0x49f33c(0x297),
+            'LiBOQ': function (_0x54e776, _0x50f894) {
+                return _0x54e776 + _0x50f894;
+            },
+            'RkFDx': _0x49f33c(0x3a6),
+            'WNJMQ': function (_0x1809e7, _0x46ac8f) {
+                return _0x1809e7 + _0x46ac8f;
+            },
+            'EOxmY': function (_0x4d05eb, _0x3b88f2) {
+                return _0x4d05eb + _0x3b88f2;
+            },
+            'gQfCx': _0x49f33c(0x316),
+            'lKUFw': function (_0x5219da, _0x4c7411) {
+                return _0x5219da(_0x4c7411);
+            },
+            'GRRkQ': _0x49f33c(0x24e)
+        };
+    _0x147094 = _0x42ebc1[_0x49f33c(0x26f)](_0x147094, _0x42ebc1[_0x49f33c(0x1e1)]);
+    const _0x590f24 = document[_0x49f33c(0x19d) + _0x49f33c(0x34e)](_0x42ebc1[_0x49f33c(0x277)]);
+    if (!_0x590f24)
+        return;
+    const _0x20afcc = document[_0x49f33c(0x214) + _0x49f33c(0x2a0)](_0x42ebc1[_0x49f33c(0x241)]);
+    _0x20afcc[_0x49f33c(0x296)] = _0x42ebc1[_0x49f33c(0x1c6)](_0x42ebc1[_0x49f33c(0x230)], _0x147094), _0x20afcc[_0x49f33c(0x33e)] = _0x42ebc1[_0x49f33c(0x17c)](_0x42ebc1[_0x49f33c(0x3bf)](_0x42ebc1[_0x49f33c(0x1c6)](ICONS[_0x147094] || ICONS[_0x49f33c(0x2ab)], _0x42ebc1[_0x49f33c(0x27e)]), _0x42ebc1[_0x49f33c(0x337)](esc, _0x1868fc)), _0x42ebc1[_0x49f33c(0x20c)]), _0x590f24[_0x49f33c(0x363) + 'd'](_0x20afcc), _0x42ebc1[_0x49f33c(0x154)](setTimeout, () => {
+        const _0x188180 = _0x49f33c;
+        _0x20afcc[_0x188180(0x3a5)][_0x188180(0x2ce)] = _0x42ebc1[_0x188180(0x362)], _0x20afcc[_0x188180(0x3a5)][_0x188180(0x3ae)] = '0', _0x20afcc[_0x188180(0x3a5)][_0x188180(0x394)] = _0x42ebc1[_0x188180(0x2d1)], _0x42ebc1[_0x188180(0x154)](setTimeout, () => _0x20afcc[_0x188180(0x346)](), 0x2084 + -0x54 + -0x1f04);
+    }, 0x719 * -0x3 + -0x26d6 + 0x47d9);
+}
+const app = createApp({
+    'data'() {
+        const _0x25e361 = _0x29b639, _0x51234a = {
+                'MFJXR': _0x25e361(0x350),
+                'euNxy': _0x25e361(0x270),
+                'Rxaee': _0x25e361(0x31b)
+            };
+        return {
+            'view': _0x51234a[_0x25e361(0x269)],
+            'user': null,
+            'userMenu': ![],
+            's': '',
+            'cat': '',
+            'sort': _0x51234a[_0x25e361(0x2de)],
+            'page': 0x1,
+            'pages': 0x1,
+            'total': 0x0,
+            'products': [],
+            'categories': [],
+            'loading': ![],
+            'dlToken': '',
+            'dlData': null,
+            'dlLoading': ![],
+            'dlError': '',
+            'authModal': '',
+            'loginMode': _0x51234a[_0x25e361(0x1bd)],
+            'loginUser': '',
+            'loginPwd': '',
+            'loginRemember': ![],
+            'loginLoading': ![],
+            'loginCaptcha': '',
+            'loginCaptchaId': '',
+            'loginCaptchaImg': '',
+            'loginCaptchaLoading': ![],
+            'smsPhone': '',
+            'smsCode': '',
+            'smsSending': ![],
+            'smsCountdown': 0x0,
+            'smsTimer': null,
+            'regUser': '',
+            'regPhone': '',
+            'regPwd': '',
+            'regLoading': ![],
+            'regCaptcha': '',
+            'regCaptchaId': '',
+            'regCaptchaImg': '',
+            'regCaptchaLoading': ![],
+            'showCO': ![],
+            'coUuid': '',
+            'coTitle': '',
+            'coPrice': 0x0,
+            'coEmail': '',
+            'coLoading': ![],
+            'showQR': ![],
+            'qrData': null,
+            'coSuccess': ![],
+            'coDownloadUrl': '',
+            'showUC': ![],
+            'ucPage': 0x1,
+            'ucOrders': [],
+            'ucPages': 0x1,
+            'ucLoading': ![],
+            'showDetail': ![],
+            'detailData': null,
+            'detailRelated': [],
+            'detailLoading': ![],
+            'pollTimer': null
+        };
+    },
+    'computed': {
+        'listTitle'() {
+            const _0x17b64d = _0x29b639, _0x20858e = {
+                    'UWGfH': function (_0x113311, _0x1725b7) {
+                        return _0x113311 + _0x1725b7;
+                    },
+                    'sLEla': _0x17b64d(0x342),
+                    'elyOj': _0x17b64d(0x232)
+                };
+            return this['s'] ? _0x20858e[_0x17b64d(0x2a8)](_0x20858e[_0x17b64d(0x254)], this['s']) : this[_0x17b64d(0x1ff)] || _0x20858e[_0x17b64d(0x23c)];
+        },
+        'dispPages'() {
+            const _0x4824e7 = _0x29b639, _0x152abb = {
+                    'HTbuO': function (_0xaded82, _0x1d466e) {
+                        return _0xaded82 <= _0x1d466e;
+                    },
+                    'dPVnm': function (_0x26b56c, _0x44c19) {
+                        return _0x26b56c <= _0x44c19;
+                    },
+                    'gAgPW': function (_0x3be8f7, _0x1d28ac) {
+                        return _0x3be8f7 === _0x1d28ac;
+                    },
+                    'twWTF': function (_0x4d3f2a, _0x404cb2) {
+                        return _0x4d3f2a === _0x404cb2;
+                    },
+                    'yIzWv': function (_0x58a14f, _0x2d2420) {
+                        return _0x58a14f <= _0x2d2420;
+                    },
+                    'eswct': function (_0x34280e, _0x4ba017) {
+                        return _0x34280e - _0x4ba017;
+                    },
+                    'ndezu': function (_0x54419e, _0x45bf38) {
+                        return _0x54419e !== _0x45bf38;
+                    }
+                }, _0x1a7f80 = this[_0x4824e7(0x39a)], _0x23d50b = this[_0x4824e7(0x169)];
+            if (_0x152abb[_0x4824e7(0x190)](_0x23d50b, -0x14f8 + 0x2456 * 0x1 + 0x51f * -0x3))
+                return [];
+            const _0x57f11c = [];
+            for (let _0x1a2dee = -0x19 * 0x17b + 0x2 * -0x1385 + 0x4c0e; _0x152abb[_0x4824e7(0x2e7)](_0x1a2dee, _0x23d50b); _0x1a2dee++) {
+                if (_0x152abb[_0x4824e7(0x1f9)](_0x1a2dee, -0xd8d * -0x1 + -0x820 + -0x56c) || _0x152abb[_0x4824e7(0x2b1)](_0x1a2dee, _0x23d50b) || _0x152abb[_0x4824e7(0x1bc)](Math[_0x4824e7(0x34c)](_0x152abb[_0x4824e7(0x23e)](_0x1a2dee, _0x1a7f80)), 0x44e * 0x3 + 0x2616 + -0x6b * 0x7a))
+                    _0x57f11c[_0x4824e7(0x280)](_0x1a2dee);
+                else {
+                    if (_0x152abb[_0x4824e7(0x361)](_0x57f11c[_0x152abb[_0x4824e7(0x23e)](_0x57f11c[_0x4824e7(0x353)], 0x13fa + -0x1486 * -0x1 + -0x1 * 0x287f)], '…'))
+                        _0x57f11c[_0x4824e7(0x280)]('…');
+                }
+            }
+            return _0x57f11c;
+        },
+        'userInitial'() {
+            const _0x16dc32 = _0x29b639;
+            return (this[_0x16dc32(0x18d)] && (this[_0x16dc32(0x18d)][_0x16dc32(0x162)] || this[_0x16dc32(0x18d)][_0x16dc32(0x26a)]) || 'U')[_0x16dc32(0x2c6)](0x164b + -0x2bb * 0x4 + 0x47 * -0x29)[_0x16dc32(0x257) + 'e']();
+        }
+    },
+    'methods': {
+        'fmtSize': fmtSize,
+        'fmtDate': fmtDate,
+        'fmtMoney': fmtMoney,
+        'esc': esc,
+        'fileExt': fileExt,
+        'catGrad': catGrad,
+        'toast': toast,
+        async 'fetchCaptcha'() {
+            const _0x34b964 = _0x29b639, _0x1748a8 = {
+                    'LqaNg': function (_0x5b53db, _0x15d31f, _0x3f6b0e) {
+                        return _0x5b53db(_0x15d31f, _0x3f6b0e);
+                    },
+                    'WOonW': _0x34b964(0x1cf) + _0x34b964(0x27b),
+                    'sOOLg': _0x34b964(0x1d2),
+                    'YiOuO': _0x34b964(0x25c) + 'Id'
+                };
+            try {
+                const _0x51d120 = await _0x1748a8[_0x34b964(0x1d5)](fetch, _0x1748a8[_0x34b964(0x2ba)], { 'credentials': _0x1748a8[_0x34b964(0x134)] });
+                if (!_0x51d120['ok'])
+                    throw new Error();
+                const _0x3207e5 = _0x51d120[_0x34b964(0x19e)][_0x34b964(0x1ae)](_0x1748a8[_0x34b964(0x283)]) || '', _0x31cceb = await _0x51d120[_0x34b964(0x2bb)]();
+                return {
+                    'cid': _0x3207e5,
+                    'url': URL[_0x34b964(0x1e7) + _0x34b964(0x1b9)](_0x31cceb)
+                };
+            } catch (_0x194988) {
+                return {
+                    'cid': '',
+                    'url': ''
+                };
+            }
+        },
+        async 'loadLoginCaptcha'() {
+            const _0x420529 = _0x29b639;
+            this[_0x420529(0x201) + _0x420529(0x2be)] = !![], this[_0x420529(0x201) + 'ha'] = '';
+            const _0x50d931 = await this[_0x420529(0x3a1) + 'ha']();
+            this[_0x420529(0x201) + _0x420529(0x1c8)] = _0x50d931[_0x420529(0x179)], this[_0x420529(0x201) + _0x420529(0x354)] = _0x50d931[_0x420529(0x2ae)], this[_0x420529(0x201) + _0x420529(0x2be)] = ![];
+        },
+        async 'loadRegCaptcha'() {
+            const _0x6d152c = _0x29b639;
+            this[_0x6d152c(0x14d) + _0x6d152c(0x21d)] = !![], this[_0x6d152c(0x14d)] = '';
+            const _0x3e8ee7 = await this[_0x6d152c(0x3a1) + 'ha']();
+            this[_0x6d152c(0x14d) + 'Id'] = _0x3e8ee7[_0x6d152c(0x179)], this[_0x6d152c(0x14d) + _0x6d152c(0x360)] = _0x3e8ee7[_0x6d152c(0x2ae)], this[_0x6d152c(0x14d) + _0x6d152c(0x21d)] = ![];
+        },
+        'openAuth'(_0x362b86) {
+            const _0x576c5d = _0x29b639, _0x239573 = {
+                    'qjtsF': function (_0x5aa7d0, _0x725e99) {
+                        return _0x5aa7d0 || _0x725e99;
+                    },
+                    'Spsxc': _0x576c5d(0x196),
+                    'Lswqe': function (_0x419b01, _0x2648bd) {
+                        return _0x419b01 === _0x2648bd;
+                    },
+                    'ZHqrd': _0x576c5d(0x31b)
+                };
+            this[_0x576c5d(0x194)] = _0x239573[_0x576c5d(0x1da)](_0x362b86, _0x239573[_0x576c5d(0x1a3)]);
+            if (_0x239573[_0x576c5d(0x14c)](_0x362b86, _0x239573[_0x576c5d(0x1a3)]))
+                this[_0x576c5d(0x168)] = _0x239573[_0x576c5d(0x202)], this[_0x576c5d(0x366)](() => this[_0x576c5d(0x170) + _0x576c5d(0x130)]());
+            else
+                this[_0x576c5d(0x366)](() => this[_0x576c5d(0x390) + _0x576c5d(0x22b)]());
+        },
+        'switchAuth'(_0x6cc5fb) {
+            const _0x5e06c6 = _0x29b639, _0x406dd6 = {
+                    'kdhVQ': function (_0x5e8eff, _0x85d4aa) {
+                        return _0x5e8eff === _0x85d4aa;
+                    },
+                    'NBfde': _0x5e06c6(0x196)
+                };
+            this[_0x5e06c6(0x194)] = _0x6cc5fb;
+            if (_0x406dd6[_0x5e06c6(0x1b8)](_0x6cc5fb, _0x406dd6[_0x5e06c6(0x1a2)]))
+                this[_0x5e06c6(0x366)](() => this[_0x5e06c6(0x170) + _0x5e06c6(0x130)]());
+            else
+                this[_0x5e06c6(0x366)](() => this[_0x5e06c6(0x390) + _0x5e06c6(0x22b)]());
+        },
+        'closeAuth'() {
+            const _0x5b24b9 = _0x29b639;
+            this[_0x5b24b9(0x194)] = '';
+        },
+        async 'doLogin'() {
+            const _0x4165b3 = _0x29b639, _0x5971a8 = {
+                    'pGaEX': function (_0x39e325, _0x575ce1, _0x312513) {
+                        return _0x39e325(_0x575ce1, _0x312513);
+                    },
+                    'pFYwv': _0x4165b3(0x341),
+                    'AmlBN': _0x4165b3(0x1f7),
+                    'KijMD': function (_0x2d1c83, _0x49cdff, _0x2619fb) {
+                        return _0x2d1c83(_0x49cdff, _0x2619fb);
+                    },
+                    'pdvzw': _0x4165b3(0x215),
+                    'FaYua': function (_0xfefe19, _0x592e38, _0x2857fd) {
+                        return _0xfefe19(_0x592e38, _0x2857fd);
+                    },
+                    'BidYv': _0x4165b3(0x306),
+                    'MFNnP': function (_0x3f3710, _0x3bccb6, _0x406f41) {
+                        return _0x3f3710(_0x3bccb6, _0x406f41);
+                    },
+                    'lIazK': _0x4165b3(0x2ca),
+                    'MFHgb': _0x4165b3(0x1cf) + _0x4165b3(0x196),
+                    'TqZnr': function (_0x5a51a4, _0x165935) {
+                        return _0x5a51a4(_0x165935);
+                    },
+                    'dDJRM': _0x4165b3(0x18d),
+                    'guxvP': function (_0x3aeab1, _0x13f611, _0x1d90c6) {
+                        return _0x3aeab1(_0x13f611, _0x1d90c6);
+                    },
+                    'vKsmK': _0x4165b3(0x187),
+                    'pHOyk': _0x4165b3(0x127),
+                    'deBdz': _0x4165b3(0x12d),
+                    'Ntyfl': _0x4165b3(0x19f)
+                };
+            if (!this[_0x4165b3(0x2fa)])
+                return _0x5971a8[_0x4165b3(0x30f)](toast, _0x5971a8[_0x4165b3(0x165)], _0x5971a8[_0x4165b3(0x38a)]);
+            if (!this[_0x4165b3(0x13f)])
+                return _0x5971a8[_0x4165b3(0x122)](toast, _0x5971a8[_0x4165b3(0x121)], _0x5971a8[_0x4165b3(0x38a)]);
+            if (!this[_0x4165b3(0x201) + 'ha'])
+                return _0x5971a8[_0x4165b3(0x299)](toast, _0x5971a8[_0x4165b3(0x199)], _0x5971a8[_0x4165b3(0x38a)]);
+            if (!this[_0x4165b3(0x201) + _0x4165b3(0x1c8)])
+                return _0x5971a8[_0x4165b3(0x28b)](toast, _0x5971a8[_0x4165b3(0x2fe)], _0x5971a8[_0x4165b3(0x38a)]);
+            this[_0x4165b3(0x290) + 'ng'] = !![];
+            const _0x2e6c61 = await api[_0x4165b3(0x2f9)](_0x5971a8[_0x4165b3(0x136)], {
+                'username': this[_0x4165b3(0x2fa)],
+                'password': this[_0x4165b3(0x13f)],
+                'captcha_id': this[_0x4165b3(0x201) + _0x4165b3(0x1c8)],
+                'captcha': this[_0x4165b3(0x201) + 'ha']
+            });
+            this[_0x4165b3(0x290) + 'ng'] = ![];
+            if (_0x2e6c61['ok'] && _0x2e6c61[_0x4165b3(0x18a)][_0x4165b3(0x127)]) {
+                const _0x459529 = _0x2e6c61[_0x4165b3(0x18a)];
+                _0x5971a8[_0x4165b3(0x23a)](setToken, _0x459529[_0x4165b3(0x32d)]), this[_0x4165b3(0x18d)] = _0x459529[_0x4165b3(0x18d)], localStorage[_0x4165b3(0x1fc)](_0x5971a8[_0x4165b3(0x1b2)], JSON[_0x4165b3(0x20a)](_0x459529[_0x4165b3(0x18d)])), this[_0x4165b3(0x207)](), _0x5971a8[_0x4165b3(0x288)](toast, _0x5971a8[_0x4165b3(0x1ea)], _0x5971a8[_0x4165b3(0x35b)]);
+            } else
+                _0x5971a8[_0x4165b3(0x299)](toast, _0x2e6c61[_0x4165b3(0x18a)][_0x4165b3(0x18e)] || _0x5971a8[_0x4165b3(0x217)], _0x5971a8[_0x4165b3(0x35d)]), this[_0x4165b3(0x170) + _0x4165b3(0x130)]();
+        },
+        async 'sendSmsCode'() {
+            const _0x38671e = _0x29b639, _0x4d4480 = {
+                    'OiNXD': function (_0x1ebd3b, _0xb3739d) {
+                        return _0x1ebd3b <= _0xb3739d;
+                    },
+                    'ShZbC': function (_0x3e1348, _0x1bbb4d) {
+                        return _0x3e1348(_0x1bbb4d);
+                    },
+                    'Iluul': function (_0x43cb97, _0x3a73f5, _0x5099bb) {
+                        return _0x43cb97(_0x3a73f5, _0x5099bb);
+                    },
+                    'BEgKd': _0x38671e(0x281),
+                    'HCGLk': _0x38671e(0x1f7),
+                    'TANVD': function (_0x4e3cc5, _0x186526, _0x3c850c) {
+                        return _0x4e3cc5(_0x186526, _0x3c850c);
+                    },
+                    'UdjsV': _0x38671e(0x38e),
+                    'riAXL': _0x38671e(0x1a8),
+                    'qUGZu': function (_0x55cd71, _0x32385d, _0x4c62d3) {
+                        return _0x55cd71(_0x32385d, _0x4c62d3);
+                    },
+                    'XvvBC': _0x38671e(0x325),
+                    'WrVje': _0x38671e(0x1cf) + _0x38671e(0x34a),
+                    'woqzF': function (_0x521617, _0x3ad1a9) {
+                        return _0x521617(_0x3ad1a9);
+                    },
+                    'aemPC': function (_0x35b764, _0x1d9c7c) {
+                        return _0x35b764 + _0x1d9c7c;
+                    },
+                    'gibhr': _0x38671e(0x13a) + '：',
+                    'EQAIe': _0x38671e(0x127),
+                    'AKpvg': _0x38671e(0x245),
+                    'rSUai': function (_0x42734e, _0x37e03b, _0xeb9495) {
+                        return _0x42734e(_0x37e03b, _0xeb9495);
+                    },
+                    'qBcaZ': function (_0xbc999b, _0x360b69, _0x3d2f09) {
+                        return _0xbc999b(_0x360b69, _0x3d2f09);
+                    },
+                    'WjITy': _0x38671e(0x2e6),
+                    'KnYke': _0x38671e(0x19f)
+                };
+            if (!this[_0x38671e(0x1c9)])
+                return _0x4d4480[_0x38671e(0x33d)](toast, _0x4d4480[_0x38671e(0x2df)], _0x4d4480[_0x38671e(0x3b7)]);
+            if (!/^1\d{10}$/[_0x38671e(0x3a2)](this[_0x38671e(0x1c9)]))
+                return _0x4d4480[_0x38671e(0x1f4)](toast, _0x4d4480[_0x38671e(0x21a)], _0x4d4480[_0x38671e(0x3b7)]);
+            if (!this[_0x38671e(0x201) + 'ha'])
+                return _0x4d4480[_0x38671e(0x33d)](toast, _0x4d4480[_0x38671e(0x36f)], _0x4d4480[_0x38671e(0x3b7)]);
+            if (!this[_0x38671e(0x201) + _0x38671e(0x1c8)])
+                return _0x4d4480[_0x38671e(0x20f)](toast, _0x4d4480[_0x38671e(0x13d)], _0x4d4480[_0x38671e(0x3b7)]);
+            this[_0x38671e(0x180)] = !![];
+            const _0x412302 = await api[_0x38671e(0x2f9)](_0x4d4480[_0x38671e(0x229)], {
+                'phone': this[_0x38671e(0x1c9)],
+                'captcha_id': this[_0x38671e(0x201) + _0x38671e(0x1c8)],
+                'captcha': this[_0x38671e(0x201) + 'ha']
+            });
+            this[_0x38671e(0x180)] = ![];
+            if (_0x412302['ok'] && _0x412302[_0x38671e(0x18a)][_0x38671e(0x127)]) {
+                const _0x560e4a = _0x412302[_0x38671e(0x18a)][_0x38671e(0x25d)];
+                if (_0x560e4a)
+                    this[_0x38671e(0x292)] = _0x4d4480[_0x38671e(0x2d6)](String, _0x560e4a), _0x4d4480[_0x38671e(0x1f4)](toast, _0x4d4480[_0x38671e(0x1cc)](_0x4d4480[_0x38671e(0x330)], _0x560e4a), _0x4d4480[_0x38671e(0x335)]);
+                else
+                    _0x4d4480[_0x38671e(0x33d)](toast, _0x4d4480[_0x38671e(0x252)], _0x4d4480[_0x38671e(0x335)]);
+                this[_0x38671e(0x322) + 'wn'] = -0xe1f + -0xc73 * -0x3 + 0x12 * -0x147;
+                if (this[_0x38671e(0x3bb)])
+                    _0x4d4480[_0x38671e(0x222)](clearInterval, this[_0x38671e(0x3bb)]);
+                this[_0x38671e(0x3bb)] = _0x4d4480[_0x38671e(0x1d9)](setInterval, () => {
+                    const _0x4ae23f = _0x38671e;
+                    this[_0x4ae23f(0x322) + 'wn']--, _0x4d4480[_0x4ae23f(0x227)](this[_0x4ae23f(0x322) + 'wn'], -0x92 * -0x2 + -0x1a * -0x27 + -0x1 * 0x51a) && (_0x4d4480[_0x4ae23f(0x222)](clearInterval, this[_0x4ae23f(0x3bb)]), this[_0x4ae23f(0x3bb)] = null);
+                }, 0x20e3 + 0x1 * -0x2344 + 0x649), this[_0x38671e(0x170) + _0x38671e(0x130)]();
+            } else
+                _0x4d4480[_0x38671e(0x2af)](toast, _0x412302[_0x38671e(0x18a)][_0x38671e(0x18e)] || _0x4d4480[_0x38671e(0x157)], _0x4d4480[_0x38671e(0x24d)]), this[_0x38671e(0x170) + _0x38671e(0x130)]();
+        },
+        async 'doSmsLogin'() {
+            const _0x175bb8 = _0x29b639, _0x2c731d = {
+                    'NUakJ': function (_0x413c98, _0xe655be, _0x1e044e) {
+                        return _0x413c98(_0xe655be, _0x1e044e);
+                    },
+                    'HAihF': _0x175bb8(0x281),
+                    'PcIWC': _0x175bb8(0x1f7),
+                    'MYIUz': _0x175bb8(0x38e),
+                    'grazR': _0x175bb8(0x29f),
+                    'WdPGD': _0x175bb8(0x1cf) + _0x175bb8(0x16f),
+                    'DekVd': function (_0x51de15, _0x4c7ed6) {
+                        return _0x51de15(_0x4c7ed6);
+                    },
+                    'PrpDf': _0x175bb8(0x18d),
+                    'aYaHu': _0x175bb8(0x1ce),
+                    'NrvIE': _0x175bb8(0x127),
+                    'tkvTb': _0x175bb8(0x12d),
+                    'Jinct': _0x175bb8(0x19f)
+                };
+            if (!this[_0x175bb8(0x1c9)])
+                return _0x2c731d[_0x175bb8(0x1cb)](toast, _0x2c731d[_0x175bb8(0x14b)], _0x2c731d[_0x175bb8(0x282)]);
+            if (!/^1\d{10}$/[_0x175bb8(0x3a2)](this[_0x175bb8(0x1c9)]))
+                return _0x2c731d[_0x175bb8(0x1cb)](toast, _0x2c731d[_0x175bb8(0x1f5)], _0x2c731d[_0x175bb8(0x282)]);
+            if (!this[_0x175bb8(0x292)])
+                return _0x2c731d[_0x175bb8(0x1cb)](toast, _0x2c731d[_0x175bb8(0x384)], _0x2c731d[_0x175bb8(0x282)]);
+            this[_0x175bb8(0x290) + 'ng'] = !![];
+            const _0xf06ec4 = await api[_0x175bb8(0x2f9)](_0x2c731d[_0x175bb8(0x2a5)], {
+                'phone': this[_0x175bb8(0x1c9)],
+                'code': this[_0x175bb8(0x292)]
+            });
+            this[_0x175bb8(0x290) + 'ng'] = ![];
+            if (_0xf06ec4['ok'] && _0xf06ec4[_0x175bb8(0x18a)][_0x175bb8(0x127)]) {
+                const _0x1ee74a = _0xf06ec4[_0x175bb8(0x18a)];
+                _0x2c731d[_0x175bb8(0x301)](setToken, _0x1ee74a[_0x175bb8(0x32d)]), this[_0x175bb8(0x18d)] = _0x1ee74a[_0x175bb8(0x18d)], localStorage[_0x175bb8(0x1fc)](_0x2c731d[_0x175bb8(0x2b8)], JSON[_0x175bb8(0x20a)](_0x1ee74a[_0x175bb8(0x18d)])), this[_0x175bb8(0x207)](), _0x2c731d[_0x175bb8(0x1cb)](toast, _0x2c731d[_0x175bb8(0x2f1)], _0x2c731d[_0x175bb8(0x336)]);
+            } else
+                _0x2c731d[_0x175bb8(0x1cb)](toast, _0xf06ec4[_0x175bb8(0x18a)][_0x175bb8(0x18e)] || _0x2c731d[_0x175bb8(0x260)], _0x2c731d[_0x175bb8(0x2f3)]);
+        },
+        async 'doRegister'() {
+            const _0x15bad = _0x29b639, _0x47c803 = {
+                    'dFHSU': function (_0xf2c01b, _0x2921cb, _0x5855c2) {
+                        return _0xf2c01b(_0x2921cb, _0x5855c2);
+                    },
+                    'jqIgZ': _0x15bad(0x341),
+                    'qSPRU': _0x15bad(0x1f7),
+                    'QYrEu': function (_0x2c5310, _0x599f7d) {
+                        return _0x2c5310 < _0x599f7d;
+                    },
+                    'cNWYp': _0x15bad(0x2a6) + '符',
+                    'CqLFF': _0x15bad(0x215),
+                    'gsCMO': function (_0x8a28af, _0x1a20ed) {
+                        return _0x8a28af < _0x1a20ed;
+                    },
+                    'gEDfk': function (_0xcc4a5c, _0x53b092, _0x8f87f8) {
+                        return _0xcc4a5c(_0x53b092, _0x8f87f8);
+                    },
+                    'sUjgB': _0x15bad(0x352),
+                    'XEyFX': function (_0xadd1ef, _0x5658f7, _0x3a9084) {
+                        return _0xadd1ef(_0x5658f7, _0x3a9084);
+                    },
+                    'XaWSL': _0x15bad(0x38e),
+                    'pKSEi': function (_0x3351e1, _0x1eaee8, _0x12b69a) {
+                        return _0x3351e1(_0x1eaee8, _0x12b69a);
+                    },
+                    'GROjO': _0x15bad(0x306),
+                    'bIEBx': function (_0x307ab6, _0x376c16, _0x4087a2) {
+                        return _0x307ab6(_0x376c16, _0x4087a2);
+                    },
+                    'fsEhs': _0x15bad(0x164),
+                    'TmqQS': _0x15bad(0x1cf) + _0x15bad(0x1ec),
+                    'JIPHn': function (_0x329c89, _0x34e787) {
+                        return _0x329c89(_0x34e787);
+                    },
+                    'Xdwpl': _0x15bad(0x18d),
+                    'uoahB': function (_0xbd78c1, _0x3a9074, _0x380574) {
+                        return _0xbd78c1(_0x3a9074, _0x380574);
+                    },
+                    'eaaPl': _0x15bad(0x2c3),
+                    'TAgic': _0x15bad(0x127),
+                    'vnrkE': _0x15bad(0x237),
+                    'FTCby': _0x15bad(0x19f)
+                };
+            if (!this[_0x15bad(0x36e)])
+                return _0x47c803[_0x15bad(0x1db)](toast, _0x47c803[_0x15bad(0x16a)], _0x47c803[_0x15bad(0x1b1)]);
+            if (_0x47c803[_0x15bad(0x139)](this[_0x15bad(0x36e)][_0x15bad(0x353)], -0x23 + -0x4e8 + -0x1 * -0x50e))
+                return _0x47c803[_0x15bad(0x1db)](toast, _0x47c803[_0x15bad(0x2d8)], _0x47c803[_0x15bad(0x1b1)]);
+            if (!this[_0x15bad(0x1a5)])
+                return _0x47c803[_0x15bad(0x1db)](toast, _0x47c803[_0x15bad(0x31c)], _0x47c803[_0x15bad(0x1b1)]);
+            if (_0x47c803[_0x15bad(0x137)](this[_0x15bad(0x1a5)][_0x15bad(0x353)], 0x752 * -0x4 + 0x1d * -0xbf + -0x26d * -0x15))
+                return _0x47c803[_0x15bad(0x356)](toast, _0x47c803[_0x15bad(0x39f)], _0x47c803[_0x15bad(0x1b1)]);
+            if (this[_0x15bad(0x1ef)] && !/^1\d{10}$/[_0x15bad(0x3a2)](this[_0x15bad(0x1ef)]))
+                return _0x47c803[_0x15bad(0x173)](toast, _0x47c803[_0x15bad(0x369)], _0x47c803[_0x15bad(0x1b1)]);
+            if (!this[_0x15bad(0x14d)])
+                return _0x47c803[_0x15bad(0x244)](toast, _0x47c803[_0x15bad(0x148)], _0x47c803[_0x15bad(0x1b1)]);
+            if (!this[_0x15bad(0x14d) + 'Id'])
+                return _0x47c803[_0x15bad(0x3b4)](toast, _0x47c803[_0x15bad(0x36c)], _0x47c803[_0x15bad(0x1b1)]);
+            this[_0x15bad(0x279)] = !![];
+            const _0x29916b = {
+                'username': this[_0x15bad(0x36e)],
+                'password': this[_0x15bad(0x1a5)],
+                'captcha_id': this[_0x15bad(0x14d) + 'Id'],
+                'captcha': this[_0x15bad(0x14d)]
+            };
+            if (this[_0x15bad(0x1ef)])
+                _0x29916b[_0x15bad(0x25b)] = this[_0x15bad(0x1ef)];
+            const _0x1f07da = await api[_0x15bad(0x2f9)](_0x47c803[_0x15bad(0x238)], _0x29916b);
+            this[_0x15bad(0x279)] = ![];
+            if (_0x1f07da['ok'] && _0x1f07da[_0x15bad(0x18a)][_0x15bad(0x127)]) {
+                const _0x224000 = _0x1f07da[_0x15bad(0x18a)];
+                _0x47c803[_0x15bad(0x2e2)](setToken, _0x224000[_0x15bad(0x32d)]), this[_0x15bad(0x18d)] = _0x224000[_0x15bad(0x18d)], localStorage[_0x15bad(0x1fc)](_0x47c803[_0x15bad(0x39e)], JSON[_0x15bad(0x20a)](_0x224000[_0x15bad(0x18d)])), this[_0x15bad(0x207)](), _0x47c803[_0x15bad(0x332)](toast, _0x47c803[_0x15bad(0x12e)], _0x47c803[_0x15bad(0x355)]);
+            } else
+                _0x47c803[_0x15bad(0x356)](toast, _0x1f07da[_0x15bad(0x18a)][_0x15bad(0x18e)] || _0x47c803[_0x15bad(0x2d3)], _0x47c803[_0x15bad(0x152)]), this[_0x15bad(0x390) + _0x15bad(0x22b)]();
+        },
+        async 'logout'() {
+            const _0x40c23b = _0x29b639, _0xa946a1 = {
+                    'BwUoq': _0x40c23b(0x2e9) + '4',
+                    'JvNow': _0x40c23b(0x1cf) + _0x40c23b(0x30c),
+                    'yaRSh': function (_0x2ff8b7, _0x30a41f) {
+                        return _0x2ff8b7(_0x30a41f);
+                    },
+                    'HKHuh': function (_0x38e791, _0x1eb9a0, _0x4c4042) {
+                        return _0x38e791(_0x1eb9a0, _0x4c4042);
+                    },
+                    'CLbFZ': _0x40c23b(0x2dd),
+                    'QXNvs': _0x40c23b(0x127),
+                    'JlghQ': _0x40c23b(0x18d)
+                }, _0x5ef282 = _0xa946a1[_0x40c23b(0x2c1)][_0x40c23b(0x2a1)]('|');
+            let _0x1a2ba4 = 0x15c7 + 0x14 * -0x2c + -0x1257;
+            while (!![]) {
+                switch (_0x5ef282[_0x1a2ba4++]) {
+                case '0':
+                    await api[_0x40c23b(0x2f9)](_0xa946a1[_0x40c23b(0x3aa)]);
+                    continue;
+                case '1':
+                    _0xa946a1[_0x40c23b(0x324)](setToken, '');
+                    continue;
+                case '2':
+                    this[_0x40c23b(0x18d)] = null;
+                    continue;
+                case '3':
+                    this[_0x40c23b(0x287)] = ![];
+                    continue;
+                case '4':
+                    _0xa946a1[_0x40c23b(0x36d)](toast, _0xa946a1[_0x40c23b(0x1eb)], _0xa946a1[_0x40c23b(0x2bd)]);
+                    continue;
+                case '5':
+                    localStorage[_0x40c23b(0x387)](_0xa946a1[_0x40c23b(0x18b)]);
+                    continue;
+                }
+                break;
+            }
+        },
+        async 'checkUserAuth'() {
+            const _0x5f4764 = _0x29b639, _0x39544d = {
+                    'PcIXR': function (_0x48ffef) {
+                        return _0x48ffef();
+                    },
+                    'ZXwEO': _0x5f4764(0x1cf) + 'me',
+                    'rBRBY': _0x5f4764(0x18d),
+                    'KgjtP': function (_0x2f4faa, _0x581b14) {
+                        return _0x2f4faa(_0x581b14);
+                    }
+                };
+            if (!_0x39544d[_0x5f4764(0x2ff)](getToken)) {
+                this[_0x5f4764(0x18d)] = null;
+                return;
+            }
+            try {
+                const _0x5c77d2 = await api[_0x5f4764(0x1ae)](_0x39544d[_0x5f4764(0x266)]);
+                _0x5c77d2['ok'] && _0x5c77d2[_0x5f4764(0x18a)][_0x5f4764(0x127)] ? (this[_0x5f4764(0x18d)] = _0x5c77d2[_0x5f4764(0x18a)], localStorage[_0x5f4764(0x1fc)](_0x39544d[_0x5f4764(0x398)], JSON[_0x5f4764(0x20a)](_0x5c77d2[_0x5f4764(0x18a)]))) : (_0x39544d[_0x5f4764(0x263)](setToken, ''), this[_0x5f4764(0x18d)] = null, localStorage[_0x5f4764(0x387)](_0x39544d[_0x5f4764(0x398)]));
+            } catch (_0x390650) {
+                this[_0x5f4764(0x18d)] = null;
+            }
+        },
+        'oauthLogin'(_0x2494ed) {
+            const _0x220396 = _0x29b639, _0x4ea0e6 = {
+                    'ZwAUj': function (_0x5cc01b, _0x36b94a) {
+                        return _0x5cc01b + _0x36b94a;
+                    },
+                    'kyyvQ': _0x220396(0x1cf) + _0x220396(0x186),
+                    'ZnOVk': _0x220396(0x284) + _0x220396(0x193),
+                    'NZaAO': function (_0xb54c92, _0x1869a0) {
+                        return _0xb54c92(_0x1869a0);
+                    }
+                }, _0x178eea = _0x4ea0e6[_0x220396(0x37e)](location[_0x220396(0x357)], location[_0x220396(0x3b9)]);
+            location[_0x220396(0x17e)] = _0x4ea0e6[_0x220396(0x37e)](_0x4ea0e6[_0x220396(0x37e)](_0x4ea0e6[_0x220396(0x37e)](_0x4ea0e6[_0x220396(0x1ac)], _0x2494ed), _0x4ea0e6[_0x220396(0x23b)]), _0x4ea0e6[_0x220396(0x132)](encodeURIComponent, _0x178eea));
+        },
+        async 'loadCategories'() {
+            const _0x66528c = _0x29b639, _0xf66d2f = { 'KhcxE': _0x66528c(0x349) + _0x66528c(0x1f0) }, _0x301b12 = await api[_0x66528c(0x1ae)](_0xf66d2f[_0x66528c(0x273)]);
+            if (_0x301b12[_0x66528c(0x18a)][_0x66528c(0x127)])
+                this[_0x66528c(0x2b9)] = _0x301b12[_0x66528c(0x18a)][_0x66528c(0x2b9)];
+        },
+        'setCat'(_0x3a4ceb) {
+            const _0x2b03ef = _0x29b639;
+            this[_0x2b03ef(0x1ff)] = _0x3a4ceb, this[_0x2b03ef(0x39a)] = -0x7b4 + -0x2411 + -0x1af * -0x1a, this[_0x2b03ef(0x2c2) + _0x2b03ef(0x2d7)](), this[_0x2b03ef(0x16b) + 'ts']();
+        },
+        'doSearch'() {
+            const _0x47781d = _0x29b639;
+            this[_0x47781d(0x39a)] = 0x2f * 0x72 + -0x1 * -0x851 + -0x1d3e, this[_0x47781d(0x16b) + 'ts']();
+        },
+        'goHome'() {
+            const _0x44a60d = _0x29b639, _0x368553 = {
+                    'YVKUN': _0x44a60d(0x262) + _0x44a60d(0x248),
+                    'qACgP': _0x44a60d(0x31e),
+                    'KFCnw': _0x44a60d(0x270)
+                }, _0x78dd1a = _0x368553[_0x44a60d(0x2c7)][_0x44a60d(0x2a1)]('|');
+            let _0xe82788 = 0x105f + -0xb * 0x2aa + 0x7 * 0x1d9;
+            while (!![]) {
+                switch (_0x78dd1a[_0xe82788++]) {
+                case '0':
+                    this[_0x44a60d(0x16b) + 'ts']();
+                    continue;
+                case '1':
+                    this[_0x44a60d(0x1ff)] = '';
+                    continue;
+                case '2':
+                    window[_0x44a60d(0x228)]({
+                        'top': 0x0,
+                        'behavior': _0x368553[_0x44a60d(0x3be)]
+                    });
+                    continue;
+                case '3':
+                    this[_0x44a60d(0x2c2) + _0x44a60d(0x2d7)]();
+                    continue;
+                case '4':
+                    this[_0x44a60d(0x39a)] = 0x134a + -0x1cd7 + 0x98e;
+                    continue;
+                case '5':
+                    this['s'] = '';
+                    continue;
+                case '6':
+                    this[_0x44a60d(0x142)] = _0x368553[_0x44a60d(0x236)];
+                    continue;
+                }
+                break;
+            }
+        },
+        async 'loadProducts'() {
+            const _0xb15cf8 = _0x29b639, _0x4e6b78 = {
+                    'UBpIM': function (_0x424486, _0x13cb21) {
+                        return _0x424486 + _0x13cb21;
+                    },
+                    'NMrWI': function (_0x3c8382, _0x277986) {
+                        return _0x3c8382 + _0x277986;
+                    },
+                    'GrTiD': function (_0x71125b, _0x1bdf2a) {
+                        return _0x71125b + _0x1bdf2a;
+                    },
+                    'YErmH': function (_0x42c202, _0x552ebd) {
+                        return _0x42c202 + _0x552ebd;
+                    },
+                    'LTcym': _0xb15cf8(0x35e) + _0xb15cf8(0x131),
+                    'sBecJ': _0xb15cf8(0x29c) + _0xb15cf8(0x206) + 'y=',
+                    'giiYZ': function (_0x370307, _0xccae47) {
+                        return _0x370307(_0xccae47);
+                    },
+                    'AnKIN': _0xb15cf8(0x231),
+                    'CzADk': _0xb15cf8(0x1b7)
+                };
+            this[_0xb15cf8(0x183)] = !![];
+            const _0x454d9f = _0x4e6b78[_0xb15cf8(0x133)](_0x4e6b78[_0xb15cf8(0x1c3)](_0x4e6b78[_0xb15cf8(0x385)](_0x4e6b78[_0xb15cf8(0x133)](_0x4e6b78[_0xb15cf8(0x188)](_0x4e6b78[_0xb15cf8(0x188)](_0x4e6b78[_0xb15cf8(0x188)](_0x4e6b78[_0xb15cf8(0x1ad)], this[_0xb15cf8(0x39a)]), _0x4e6b78[_0xb15cf8(0x23d)]), _0x4e6b78[_0xb15cf8(0x17d)](encodeURIComponent, this[_0xb15cf8(0x1ff)])), _0x4e6b78[_0xb15cf8(0x258)]), _0x4e6b78[_0xb15cf8(0x17d)](encodeURIComponent, this['s'])), _0x4e6b78[_0xb15cf8(0x300)]), this[_0xb15cf8(0x142)]), _0x398504 = await api[_0xb15cf8(0x1ae)](_0x454d9f);
+            this[_0xb15cf8(0x183)] = ![], _0x398504[_0xb15cf8(0x18a)][_0xb15cf8(0x127)] && (this[_0xb15cf8(0x2a2)] = _0x398504[_0xb15cf8(0x18a)][_0xb15cf8(0x2a2)] || [], this[_0xb15cf8(0x17b)] = _0x398504[_0xb15cf8(0x18a)][_0xb15cf8(0x17b)], this[_0xb15cf8(0x169)] = _0x398504[_0xb15cf8(0x18a)][_0xb15cf8(0x169)] || -0x4b * 0x52 + 0x1 * -0x1948 + 0x314f, this[_0xb15cf8(0x366)](() => {
+                const _0xd266a6 = _0xb15cf8;
+                if (window[_0xd266a6(0x304)])
+                    AOS[_0xd266a6(0x378)]();
+            }));
+        },
+        'gotoPage'(_0x44b51e) {
+            const _0x5751fe = _0x29b639, _0x356949 = {
+                    'NOeNZ': function (_0x481b84, _0x226e01) {
+                        return _0x481b84 < _0x226e01;
+                    },
+                    'byeKN': function (_0x14cf40, _0x339a78) {
+                        return _0x14cf40 > _0x339a78;
+                    },
+                    'MPzII': _0x5751fe(0x31e)
+                };
+            if (_0x356949[_0x5751fe(0x28a)](_0x44b51e, -0x53 * 0x4f + 0x1 * -0xbf + 0x1 * 0x1a5d) || _0x356949[_0x5751fe(0x318)](_0x44b51e, this[_0x5751fe(0x169)]))
+                return;
+            this[_0x5751fe(0x39a)] = _0x44b51e, this[_0x5751fe(0x16b) + 'ts'](), window[_0x5751fe(0x228)]({
+                'top': 0xc8,
+                'behavior': _0x356949[_0x5751fe(0x213)]
+            });
+        },
+        async 'openDetail'(_0x4c2d75) {
+            const _0x5af377 = _0x29b639, _0x458f69 = {
+                    'ApATz': function (_0x23d622, _0x1f64bb) {
+                        return _0x23d622 + _0x1f64bb;
+                    },
+                    'ElpXN': _0x5af377(0x35e) + _0x5af377(0x1c2),
+                    'RUwXC': function (_0x14ce22, _0x3d38c0, _0x2223a0) {
+                        return _0x14ce22(_0x3d38c0, _0x2223a0);
+                    },
+                    'QJwrR': _0x5af377(0x3ab),
+                    'eGpNB': _0x5af377(0x19f)
+                };
+            this[_0x5af377(0x2b0)] = !![], this[_0x5af377(0x1d0) + _0x5af377(0x393)] = !![], this[_0x5af377(0x312)] = null, this[_0x5af377(0x36b) + _0x5af377(0x11e)] = [];
+            const _0x1c7fb2 = await api[_0x5af377(0x1ae)](_0x458f69[_0x5af377(0x328)](_0x458f69[_0x5af377(0x27f)], _0x4c2d75));
+            this[_0x5af377(0x1d0) + _0x5af377(0x393)] = ![], _0x1c7fb2[_0x5af377(0x18a)][_0x5af377(0x127)] ? (this[_0x5af377(0x312)] = _0x1c7fb2[_0x5af377(0x18a)][_0x5af377(0x250)], this[_0x5af377(0x36b) + _0x5af377(0x11e)] = _0x1c7fb2[_0x5af377(0x18a)][_0x5af377(0x147)] || []) : (this[_0x5af377(0x2b0)] = ![], _0x458f69[_0x5af377(0x195)](toast, _0x458f69[_0x5af377(0x1e3)], _0x458f69[_0x5af377(0x3ba)]));
+        },
+        'closeDetail'() {
+            const _0x1452df = _0x29b639;
+            this[_0x1452df(0x2b0)] = ![], this[_0x1452df(0x312)] = null;
+        },
+        'buyFromDetail'() {
+            const _0x19852f = _0x29b639;
+            if (!this[_0x19852f(0x312)])
+                return;
+            const _0x1e6332 = this[_0x19852f(0x312)];
+            this[_0x19852f(0x1ca) + 'l'](), this[_0x19852f(0x2b5)](_0x1e6332[_0x19852f(0x39d)], _0x1e6332[_0x19852f(0x184)], _0x1e6332[_0x19852f(0x2c0)]);
+        },
+        'openCO'(_0xf30d53, _0x531bab, _0xb1afc7) {
+            const _0x20f233 = _0x29b639, _0x139f27 = { 'ZTFop': _0x20f233(0x2e9) + '4' }, _0x5d5e44 = _0x139f27[_0x20f233(0x224)][_0x20f233(0x2a1)]('|');
+            let _0x40ef56 = -0x1466 * -0x1 + -0xd0e + -0x4 * 0x1d6;
+            while (!![]) {
+                switch (_0x5d5e44[_0x40ef56++]) {
+                case '0':
+                    this[_0x20f233(0x28f)] = !![];
+                    continue;
+                case '1':
+                    this[_0x20f233(0x3a0)] = _0xf30d53;
+                    continue;
+                case '2':
+                    this[_0x20f233(0x298)] = _0x531bab;
+                    continue;
+                case '3':
+                    this[_0x20f233(0x1dc)] = this[_0x20f233(0x18d)] ? this[_0x20f233(0x18d)][_0x20f233(0x15b)] || '' : '';
+                    continue;
+                case '4':
+                    this[_0x20f233(0x1af)] = ![];
+                    continue;
+                case '5':
+                    this[_0x20f233(0x2f4)] = _0xb1afc7;
+                    continue;
+                }
+                break;
+            }
+        },
+        'closeCO'() {
+            const _0x49773f = _0x29b639, _0x4e494b = {
+                    'PwmvE': function (_0x3bd3bf, _0x2b99dc) {
+                        return _0x3bd3bf(_0x2b99dc);
+                    }
+                };
+            this[_0x49773f(0x28f)] = ![], _0x4e494b[_0x49773f(0x37f)](clearInterval, this[_0x49773f(0x24a)]);
+        },
+        async 'createCO'() {
+            const _0x5405bb = _0x29b639, _0x4a59d1 = {
+                    'vQShN': _0x5405bb(0x1d4) + _0x5405bb(0x242),
+                    'KfvSB': function (_0x33e12d, _0x4999d1, _0x3547d1) {
+                        return _0x33e12d(_0x4999d1, _0x3547d1);
+                    },
+                    'DswuI': _0x5405bb(0x243),
+                    'wkznd': _0x5405bb(0x19f)
+                };
+            this[_0x5405bb(0x1af)] = !![];
+            const _0x31ffc5 = await api[_0x5405bb(0x2f9)](_0x4a59d1[_0x5405bb(0x370)], {
+                'product_uuid': this[_0x5405bb(0x3a0)],
+                'email': this[_0x5405bb(0x1dc)]
+            });
+            this[_0x5405bb(0x1af)] = ![];
+            if (!_0x31ffc5['ok'] || !_0x31ffc5[_0x5405bb(0x18a)][_0x5405bb(0x127)])
+                return _0x4a59d1[_0x5405bb(0x343)](toast, _0x31ffc5[_0x5405bb(0x18a)][_0x5405bb(0x18e)] || _0x4a59d1[_0x5405bb(0x172)], _0x4a59d1[_0x5405bb(0x31f)]);
+            if (_0x31ffc5[_0x5405bb(0x18a)][_0x5405bb(0x1f3)]) {
+                this[_0x5405bb(0x225)] = !![], this[_0x5405bb(0x271) + _0x5405bb(0x2fc)] = _0x31ffc5[_0x5405bb(0x18a)][_0x5405bb(0x2ac) + 'rl'], this[_0x5405bb(0x28f)] = ![];
+                return;
+            }
+            this[_0x5405bb(0x28f)] = ![], this[_0x5405bb(0x2eb)] = !![], this[_0x5405bb(0x22e)] = _0x31ffc5[_0x5405bb(0x18a)], this[_0x5405bb(0x32b)](_0x31ffc5[_0x5405bb(0x18a)][_0x5405bb(0x30e)]);
+        },
+        'startPoll'(_0x9056d) {
+            const _0xe2180 = _0x29b639, _0x25103b = {
+                    'mCGnF': function (_0x526a96, _0x1ea38e) {
+                        return _0x526a96 + _0x1ea38e;
+                    },
+                    'KeKyp': _0xe2180(0x1d4) + _0xe2180(0x174),
+                    'RGsZP': function (_0x5389d8, _0x31f8df) {
+                        return _0x5389d8 === _0x31f8df;
+                    },
+                    'TyUQj': _0xe2180(0x249),
+                    'DIjyC': function (_0x563e6d, _0x167b28) {
+                        return _0x563e6d(_0x167b28);
+                    },
+                    'sGrfS': function (_0x349971, _0x5ae781) {
+                        return _0x349971 > _0x5ae781;
+                    },
+                    'BazUv': function (_0x32cae5, _0x5a5453, _0x3f649c) {
+                        return _0x32cae5(_0x5a5453, _0x3f649c);
+                    },
+                    'OomOv': _0xe2180(0x13e),
+                    'uUGOZ': _0xe2180(0x1f7),
+                    'kYveT': function (_0x69ebc2, _0x31c744, _0x30d28e) {
+                        return _0x69ebc2(_0x31c744, _0x30d28e);
+                    }
+                };
+            _0x25103b[_0xe2180(0x138)](clearInterval, this[_0xe2180(0x24a)]);
+            let _0x478a06 = 0x2e7 * 0xd + -0x45a + -0x2161;
+            this[_0xe2180(0x24a)] = _0x25103b[_0xe2180(0x268)](setInterval, async () => {
+                const _0x36624f = _0xe2180;
+                _0x478a06++;
+                const _0x3d06a3 = await api[_0x36624f(0x1ae)](_0x25103b[_0x36624f(0x200)](_0x25103b[_0x36624f(0x1bb)], _0x9056d));
+                _0x25103b[_0x36624f(0x123)](_0x3d06a3[_0x36624f(0x18a)][_0x36624f(0x264)], _0x25103b[_0x36624f(0x2da)]) && (_0x25103b[_0x36624f(0x138)](clearInterval, this[_0x36624f(0x24a)]), this[_0x36624f(0x2eb)] = ![], this[_0x36624f(0x225)] = !![], this[_0x36624f(0x271) + _0x36624f(0x2fc)] = _0x3d06a3[_0x36624f(0x18a)][_0x36624f(0x2ac) + 'rl']), _0x25103b[_0x36624f(0x3ad)](_0x478a06, -0xd67 + 0x84 * 0xc + -0x1 * -0x7cd) && (_0x25103b[_0x36624f(0x138)](clearInterval, this[_0x36624f(0x24a)]), this[_0x36624f(0x2eb)] = ![], _0x25103b[_0x36624f(0x2c4)](toast, _0x25103b[_0x36624f(0x16c)], _0x25103b[_0x36624f(0x367)]));
+            }, -0xbae + -0x4f * 0x45 + 0x1 * 0x28c9);
+        },
+        'cancelCO'() {
+            const _0x22dfad = _0x29b639, _0x1f6391 = {
+                    'CDGjP': function (_0x4d1687, _0x20f87b) {
+                        return _0x4d1687(_0x20f87b);
+                    }
+                };
+            _0x1f6391[_0x22dfad(0x208)](clearInterval, this[_0x22dfad(0x24a)]), this[_0x22dfad(0x2eb)] = ![];
+        },
+        'goDownload'() {
+            const _0x4c58c5 = _0x29b639, _0x47beed = this[_0x4c58c5(0x271) + _0x4c58c5(0x2fc)] ? this[_0x4c58c5(0x271) + _0x4c58c5(0x2fc)][_0x4c58c5(0x2a1)]('/')[_0x4c58c5(0x2fb)]() : '';
+            this[_0x4c58c5(0x225)] = ![], this[_0x4c58c5(0x271) + _0x4c58c5(0x2fc)] = '', this[_0x4c58c5(0x380)](_0x47beed);
+        },
+        async 'showDL'(_0xa8de1) {
+            const _0x53f6f8 = _0x29b639, _0x284242 = {
+                    'KurbJ': _0x53f6f8(0x323),
+                    'OqZqt': function (_0x5b6adc, _0x204f01) {
+                        return _0x5b6adc + _0x204f01;
+                    },
+                    'niRhu': _0x53f6f8(0x2bc) + _0x53f6f8(0x209),
+                    'MEMJj': _0x53f6f8(0x293)
+                };
+            if (!_0xa8de1)
+                return;
+            this[_0x53f6f8(0x305)] = _0x284242[_0x53f6f8(0x15d)], this[_0x53f6f8(0x2e4)] = _0xa8de1, this[_0x53f6f8(0x19b)] = !![], this[_0x53f6f8(0x233)] = null, this[_0x53f6f8(0x149)] = '';
+            const _0x3361f1 = await api[_0x53f6f8(0x1ae)](_0x284242[_0x53f6f8(0x253)](_0x284242[_0x53f6f8(0x334)], _0xa8de1));
+            this[_0x53f6f8(0x19b)] = ![];
+            if (!_0x3361f1['ok'] || !_0x3361f1[_0x53f6f8(0x18a)][_0x53f6f8(0x127)])
+                this[_0x53f6f8(0x149)] = _0x3361f1[_0x53f6f8(0x18a)][_0x53f6f8(0x18e)] || _0x284242[_0x53f6f8(0x311)];
+            else
+                this[_0x53f6f8(0x233)] = _0x3361f1[_0x53f6f8(0x18a)];
+        },
+        'hideDL'() {
+            const _0x4f8e72 = _0x29b639, _0x4a760c = {
+                    'XKHNK': _0x4f8e72(0x1ab),
+                    'kldtP': _0x4f8e72(0x350)
+                }, _0x1a3dc5 = _0x4a760c[_0x4f8e72(0x1a1)][_0x4f8e72(0x2a1)]('|');
+            let _0x4a822d = 0x16f0 + -0xb7d * -0x1 + -0x226d;
+            while (!![]) {
+                switch (_0x1a3dc5[_0x4a822d++]) {
+                case '0':
+                    location[_0x4f8e72(0x3b9)] = '';
+                    continue;
+                case '1':
+                    this[_0x4f8e72(0x149)] = '';
+                    continue;
+                case '2':
+                    location[_0x4f8e72(0x307)] = '';
+                    continue;
+                case '3':
+                    this[_0x4f8e72(0x305)] = _0x4a760c[_0x4f8e72(0x2bf)];
+                    continue;
+                case '4':
+                    this[_0x4f8e72(0x233)] = null;
+                    continue;
+                }
+                break;
+            }
+        },
+        'openUC'() {
+            const _0x4b47b0 = _0x29b639, _0x554311 = {
+                    'OwvrI': function (_0x2dfc37, _0x279096, _0x2c86ee) {
+                        return _0x2dfc37(_0x279096, _0x2c86ee);
+                    },
+                    'qKqCZ': _0x4b47b0(0x176),
+                    'bsAit': _0x4b47b0(0x1f7),
+                    'sGdeU': _0x4b47b0(0x196)
+                };
+            if (!this[_0x4b47b0(0x18d)]) {
+                _0x554311[_0x4b47b0(0x33b)](toast, _0x554311[_0x4b47b0(0x14f)], _0x554311[_0x4b47b0(0x129)]), this[_0x4b47b0(0x2e3)](_0x554311[_0x4b47b0(0x32f)]);
+                return;
+            }
+            this[_0x4b47b0(0x1fe)] = !![], this[_0x4b47b0(0x3b5)] = -0x546 + -0x19e0 + 0x19 * 0x13f, this[_0x4b47b0(0x382)]();
+        },
+        'closeUC'() {
+            const _0x383009 = _0x29b639;
+            this[_0x383009(0x1fe)] = ![];
+        },
+        async 'loadUC'() {
+            const _0x5f0975 = _0x29b639, _0x514697 = {
+                    'pDkJx': function (_0x5cff10, _0x331cca) {
+                        return _0x5cff10 + _0x331cca;
+                    },
+                    'wPusL': _0x5f0975(0x21e) + _0x5f0975(0x22c) + 'e=',
+                    'RnfAR': _0x5f0975(0x29c) + '10',
+                    'mNLQd': function (_0x49d960, _0x5e65ce) {
+                        return _0x49d960 === _0x5e65ce;
+                    },
+                    'FLJUT': function (_0x13452a, _0x16593b, _0x4d796c) {
+                        return _0x13452a(_0x16593b, _0x4d796c);
+                    },
+                    'fnPhr': _0x5f0975(0x2cb) + '录',
+                    'aXILw': _0x5f0975(0x1f7),
+                    'MChXn': _0x5f0975(0x196),
+                    'MizEi': function (_0x1471ad, _0x5cd9de, _0x5d2183) {
+                        return _0x1471ad(_0x5cd9de, _0x5d2183);
+                    },
+                    'faPUF': _0x5f0975(0x156),
+                    'sIqaV': _0x5f0975(0x19f)
+                };
+            this[_0x5f0975(0x1df)] = !![];
+            try {
+                const _0x3982f3 = await api[_0x5f0975(0x1ae)](_0x514697[_0x5f0975(0x2f2)](_0x514697[_0x5f0975(0x2f2)](_0x514697[_0x5f0975(0x166)], this[_0x5f0975(0x3b5)]), _0x514697[_0x5f0975(0x2d9)]));
+                if (!_0x3982f3['ok'] || !_0x3982f3[_0x5f0975(0x18a)][_0x5f0975(0x127)]) {
+                    this[_0x5f0975(0x295)] = [];
+                    if (_0x514697[_0x5f0975(0x386)](_0x3982f3[_0x5f0975(0x264)], -0xdff * -0x1 + -0xb3b * -0x2 + 0x22e4 * -0x1))
+                        this[_0x5f0975(0x18d)] = null, this[_0x5f0975(0x2ad)](), _0x514697[_0x5f0975(0x16e)](toast, _0x514697[_0x5f0975(0x2f6)], _0x514697[_0x5f0975(0x25a)]), this[_0x5f0975(0x2e3)](_0x514697[_0x5f0975(0x13b)]);
+                    else
+                        _0x514697[_0x5f0975(0x2e8)](toast, _0x3982f3[_0x5f0975(0x18a)][_0x5f0975(0x18e)] || _0x514697[_0x5f0975(0x30a)], _0x514697[_0x5f0975(0x397)]);
+                } else
+                    this[_0x5f0975(0x295)] = _0x3982f3[_0x5f0975(0x18a)][_0x5f0975(0x1cd)] || [], this[_0x5f0975(0x1f2)] = _0x3982f3[_0x5f0975(0x18a)][_0x5f0975(0x169)] || 0x1d12 + 0xb * 0x76 + -0x9 * 0x3cb;
+            } catch (_0x27bab5) {
+                this[_0x5f0975(0x295)] = [];
+            }
+            this[_0x5f0975(0x1df)] = ![];
+        },
+        'ucGo'(_0x1142e6) {
+            const _0x3d1fb9 = _0x29b639;
+            this[_0x3d1fb9(0x3b5)] = _0x1142e6, this[_0x3d1fb9(0x382)]();
+        },
+        async 'reDL'(_0x1a3cd8) {
+            const _0x18e5d9 = _0x29b639, _0x498932 = {
+                    'RzCWK': function (_0x2eb9c5, _0x2d6bc9) {
+                        return _0x2eb9c5 + _0x2d6bc9;
+                    },
+                    'SLiyx': function (_0x6056d9, _0x43dedb) {
+                        return _0x6056d9 + _0x43dedb;
+                    },
+                    'zPpQs': _0x18e5d9(0x21e) + _0x18e5d9(0x17f),
+                    'MkyWY': _0x18e5d9(0x1a7) + 'd',
+                    'oeJqY': function (_0x28b923, _0x4fe68c, _0x12f731) {
+                        return _0x28b923(_0x4fe68c, _0x12f731);
+                    },
+                    'dodMV': _0x18e5d9(0x2d5),
+                    'Ztgvr': _0x18e5d9(0x19f)
+                }, _0x137838 = await api[_0x18e5d9(0x1ae)](_0x498932[_0x18e5d9(0x3bd)](_0x498932[_0x18e5d9(0x1e6)](_0x498932[_0x18e5d9(0x256)], _0x1a3cd8), _0x498932[_0x18e5d9(0x1e8)]));
+            if (_0x137838['ok'] && _0x137838[_0x18e5d9(0x18a)][_0x18e5d9(0x127)])
+                this[_0x18e5d9(0x2ad)](), this[_0x18e5d9(0x380)](_0x137838[_0x18e5d9(0x18a)][_0x18e5d9(0x2ac) + 'rl'][_0x18e5d9(0x2a1)]('/')[_0x18e5d9(0x2fb)]());
+            else
+                _0x498932[_0x18e5d9(0x2ef)](toast, _0x137838[_0x18e5d9(0x18a)][_0x18e5d9(0x18e)] || _0x498932[_0x18e5d9(0x1aa)], _0x498932[_0x18e5d9(0x32c)]);
+        }
+    },
+    async 'mounted'() {
+        const _0x270b9f = _0x29b639, _0x3e9e85 = {
+                'vFxSd': _0x270b9f(0x18d),
+                'ACTWq': _0x270b9f(0x32d),
+                'cnumk': function (_0x349f34, _0x5e5451) {
+                    return _0x349f34(_0x5e5451);
+                },
+                'yslBI': _0x270b9f(0x1c5),
+                'ZMbwD': function (_0x33b647, _0x3cb5de, _0x2fd102) {
+                    return _0x33b647(_0x3cb5de, _0x2fd102);
+                },
+                'QTyYp': _0x270b9f(0x1ce),
+                'bhoCW': _0x270b9f(0x127),
+                'RQgcr': _0x270b9f(0x33f)
+            };
+        window[_0x270b9f(0x294)] = this;
+        const _0xcc64fa = localStorage[_0x270b9f(0x2fd)](_0x3e9e85[_0x270b9f(0x1fd)]);
+        if (_0xcc64fa)
+            try {
+                this[_0x270b9f(0x18d)] = JSON[_0x270b9f(0x1b4)](_0xcc64fa);
+            } catch (_0x19e0a3) {
+            }
+        await this[_0x270b9f(0x220) + _0x270b9f(0x150)](), this[_0x270b9f(0x2c2) + _0x270b9f(0x2d7)](), this[_0x270b9f(0x16b) + 'ts']();
+        const _0x5302d3 = new URLSearchParams(location[_0x270b9f(0x3b9)]), _0x3c7d3e = location[_0x270b9f(0x307)];
+        if (_0x5302d3[_0x270b9f(0x1ae)](_0x3e9e85[_0x270b9f(0x1b3)])) {
+            _0x3e9e85[_0x270b9f(0x383)](setToken, _0x5302d3[_0x270b9f(0x1ae)](_0x3e9e85[_0x270b9f(0x1b3)])), await this[_0x270b9f(0x220) + _0x270b9f(0x150)]();
+            const _0x2eaa5d = _0x5302d3[_0x270b9f(0x1ae)](_0x3e9e85[_0x270b9f(0x2b6)]) || '/';
+            history[_0x270b9f(0x171) + 'te']({}, '', _0x2eaa5d), _0x3e9e85[_0x270b9f(0x126)](toast, _0x3e9e85[_0x270b9f(0x1ba)], _0x3e9e85[_0x270b9f(0x29b)]);
+        }
+        if (_0x3c7d3e[_0x270b9f(0x2cd)](_0x3e9e85[_0x270b9f(0x331)]))
+            this[_0x270b9f(0x380)](_0x3c7d3e[_0x270b9f(0x2a1)]('/')[-0x2 * 0xe + 0xa3c + 0x1 * -0xa1f]);
+    }
+});
+function _0x5134(_0x2ac0b9, _0x5408b8) {
+    const _0xd79181 = _0x8089();
+    return _0x5134 = function (_0x2fbdb3, _0x1bf810) {
+        _0x2fbdb3 = _0x2fbdb3 - (0x2365 + -0x1 * -0xb93 + -0x2dda);
+        let _0x2e6024 = _0xd79181[_0x2fbdb3];
+        return _0x2e6024;
+    }, _0x5134(_0x2ac0b9, _0x5408b8);
+}
+window[_0x29b639(0x1bf) + _0x29b639(0x1a4)](_0x29b639(0x37d), function () {
+    const _0x2849ba = _0x29b639, _0x43fc3d = {
+            'kpPIe': _0x2849ba(0x33f),
+            'YnGOF': function (_0x1857d1, _0x5ceb5d) {
+                return _0x1857d1 === _0x5ceb5d;
+            },
+            'qqyIV': _0x2849ba(0x350)
+        };
+    if (!window[_0x2849ba(0x294)])
+        return;
+    if (location[_0x2849ba(0x307)][_0x2849ba(0x2cd)](_0x43fc3d[_0x2849ba(0x2e1)]))
+        window[_0x2849ba(0x294)][_0x2849ba(0x380)](location[_0x2849ba(0x307)][_0x2849ba(0x2a1)]('/')[0xd00 + 0x1 * 0x17c1 + -0x2a0 * 0xe]);
+    else {
+        if (_0x43fc3d[_0x2849ba(0x308)](location[_0x2849ba(0x307)], ''))
+            window[_0x2849ba(0x294)][_0x2849ba(0x305)] = _0x43fc3d[_0x2849ba(0x33a)];
+    }
+}), app[_0x29b639(0x25f)](_0x29b639(0x167));
+</script>
+</body>
+</html>

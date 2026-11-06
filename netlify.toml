@@ -1,0 +1,10 @@
+[[redirects]]
+  from = "/api/*"
+  to = "http://42.193.173.200:5173/api/:splat"
+  status = 200
+
+# 如果确实需要 SPA 兜底，这条必须放在下面
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
